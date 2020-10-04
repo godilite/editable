@@ -5,11 +5,10 @@
 ### Specs
 [![pub](https://img.shields.io/pub/v/editable.svg?style=flat)](https://pub.dev/packages/editable)
 
-
 This package allows you to create editable tables and spreadsheets with ease, either by providing inital row and column count
 to display an empty table, or use it with predefined rows and column data sets.
 
-**It has methods to save data from edited rows**. ❤️
+**It is compatible with Flutter Desktop (Windows, Linux, MacOS), IOS, Android, and Web**. ❤️
 
 ## Features
 * Save Edited Rows
@@ -31,7 +30,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.0.2"
+  editable: "^1.0.3"
 ```
 
 In your library add the following import:
@@ -119,9 +118,12 @@ To create a new table, use the `Editable()` widget class and provide the table d
    returns only values if row is edited, otherwise returns a string ['no edit']
 
 # Screenshots
-![Editable Table with Data](https://user-images.githubusercontent.com/41484542/95013572-08794580-0639-11eb-818d-8cab6ab4c51a.png)
-![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/95013599-3ced0180-0639-11eb-83e0-501215627ccd.png)
-![Table with save icons](https://user-images.githubusercontent.com/41484542/95013617-6a39af80-0639-11eb-8058-b3ccbe3d475f.png)
+### Editable Table with Data
+![Editable Table with Data](https://user-images.githubusercontent.com/41484542/95015473-0321f800-0645-11eb-8618-91de4cf87984.png)
+### Empty SpreadSheet
+![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/95015511-35cbf080-0645-11eb-9ca2-8a41cb89d348.png)
+### Table with Save Icon
+![Table with save icons](https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png)
 
 # Roadmap
 The following are immediate work In progress for the next version of the project:

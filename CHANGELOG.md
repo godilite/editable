@@ -13,6 +13,11 @@
 
 * minor edit to package metatags
 
-## [1.0.1] - 04/10/2020.
+## [1.0.2] - 04/10/2020.
 
 * minor edit to package readme
+
+## [1.0.3] - 04/10/2020.
+
+* minor edit to package readme
+* compatability check passed for all OS
