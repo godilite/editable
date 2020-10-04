@@ -12,3 +12,7 @@
 ## [1.0.1] - 04/10/2020.
 
 * minor edit to package metatags
+
+## [1.0.1] - 04/10/2020.
+
+* minor edit to package readme
