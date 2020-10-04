@@ -13,17 +13,17 @@ to display an empty table, or use it with predefined rows and column data sets.
 
 ## Features
 * Save Edited Rows
-* Save edited cell 
+* Save Edited cell 
 * Customize cell data
-* Add empty rows
-* Create empty tables
-* Customizable save button
-* Customize table headers
+* Add Empty rows
+* Create Empty tables
+* Customizable Save button
+* Customize Table headers
 
 ### Spread Some :heart:
-[![GitHub followers](https://img.shields.io/github/followers/sososdk.svg?style=social&label=Follow)](https://github.com/godilite)
+[![GitHub followers](https://img.shields.io/github/followers/godilite.svg?style=social&label=Follow)](https://github.com/godilite)
 
-# Getting started
+## Getting started
 
 In the `pubspec.yaml` of your flutter project, add the following
 dependency:
