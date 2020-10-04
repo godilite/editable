@@ -21,3 +21,9 @@
 
 * minor edit to package readme
 * compatability check passed for all OS
+
+## [1.0.4] - 04/10/2020.
+
+* fix: removes Space showing on small screen sizes if saveIcon is shown
+* compatability check passed for all OS
+* formats code based on dartfmt
