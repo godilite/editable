@@ -47,8 +47,9 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 2,
       child: Container(
           height: widget._trHeight < 40 ? 40 : widget._trHeight,
           decoration: BoxDecoration(

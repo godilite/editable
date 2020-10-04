@@ -60,7 +60,7 @@ class Editable extends StatefulWidget {
       this.thPaddingTop = 0.0,
       this.thPaddingRight = 0.0,
       this.thPaddingBottom = 0.0,
-      this.trHeight = 40.0,
+      this.trHeight = 50.0,
       this.borderWidth = 0.5,
       this.thWeight = FontWeight.w600,
       this.thSize = 18,
@@ -267,25 +267,47 @@ class _EditableState extends State<Editable> {
     rows = [...sampleRow];
   }
 
+  ///Create an empty column for saveIcon
+  Widget _iconColumn() {
+    return Visibility(
+      visible: widget.showSaveIcon,
+      child: Expanded(
+        flex: 1,
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: widget.thPaddingLeft,
+            top: widget.thPaddingTop,
+            bottom: widget.thPaddingBottom,
+            right: widget.thPaddingRight,
+          ),
+          child: Text('asa'),
+        ),
+      ),
+    );
+  }
+
   /// Builds saveIcon widget
   Widget _saveIcon(index) {
     return Visibility(
       visible: widget.showSaveIcon,
-      child: IconButton(
-        icon: Icon(
-          widget.saveIcon,
-          color: widget.saveIconColor,
-          size: widget.saveIconSize,
+      child: Expanded(
+        flex: 1,
+        child: IconButton(
+          icon: Icon(
+            widget.saveIcon,
+            color: widget.saveIconColor,
+            size: widget.saveIconSize,
+          ),
+          onPressed: () {
+            int rowIndex = editedRows.indexWhere(
+                (element) => element['row'] == index ? true : false);
+            if (rowIndex != -1) {
+              widget.onRowSaved(editedRows[rowIndex]);
+            } else {
+              widget.onRowSaved('no edit');
+            }
+          },
         ),
-        onPressed: () {
-          int rowIndex = editedRows
-              .indexWhere((element) => element['row'] == index ? true : false);
-          if (rowIndex != -1) {
-            widget.onRowSaved(editedRows[rowIndex]);
-          } else {
-            widget.onRowSaved('no edit');
-          }
-        },
       ),
     );
   }
@@ -329,15 +351,17 @@ class _EditableState extends State<Editable> {
   List<Widget> get _tableHeaders => List<Widget>.generate(columnCount, (index) {
         // ignore: unnecessary_statements
         columns == null || columns.isEmpty ? _columnBlueprint() : true;
-        return THeader(
-            thPaddingLeft: widget.thPaddingLeft,
-            thPaddingTop: widget.thPaddingTop,
-            thPaddingBottom: widget.thPaddingBottom,
-            thPaddingRight: widget.thPaddingRight,
-            headers: columns,
-            thWeight: widget.thWeight,
-            thSize: widget.thSize,
-            index: index);
+        return columnCount + 1 == (index + 1)
+            ? _iconColumn()
+            : THeader(
+                thPaddingLeft: widget.thPaddingLeft,
+                thPaddingTop: widget.thPaddingTop,
+                thPaddingBottom: widget.thPaddingBottom,
+                thPaddingRight: widget.thPaddingRight,
+                headers: columns,
+                thWeight: widget.thWeight,
+                thSize: widget.thSize,
+                index: index);
       });
 
   /// Temporarily holds all edited rows
