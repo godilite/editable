@@ -278,6 +278,7 @@ class _EditableState extends State<Editable> {
 
   /// Generates table columns 
   List<Widget> get _tableHeaders => List<Widget>.generate(columnCount, (index) { 
+        // ignore: unnecessary_statements
         columns == null || columns.isEmpty ? _columnBlueprint() : true;
     return THeader(thPaddingLeft: widget.thPaddingLeft, 
                 thPaddingTop: widget.thPaddingTop, 
