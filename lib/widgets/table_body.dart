@@ -19,7 +19,11 @@ class RowBuilder extends StatefulWidget {
     @required this.tdPaddingRight,
     @required this.onSubmitted,
     @required this.onChanged,
-  }) : _trHeight = trHeight, _borderColor = borderColor, _borderWidth = borderWidth, super(key: key);
+  })  : _trHeight = trHeight,
+        _borderColor = borderColor,
+        _borderWidth = borderWidth,
+        super(key: key);
+
   /// Table row height
   final double _trHeight;
   final Color _borderColor;
@@ -28,7 +32,7 @@ class RowBuilder extends StatefulWidget {
   final TextAlign tdAlignment;
   final TextStyle tdStyle;
   final int index;
-  final col; 
+  final col;
   final double tdPaddingLeft;
   final double tdPaddingTop;
   final double tdPaddingBottom;
@@ -43,26 +47,29 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-    flex: 1,
-    child: Container(
-      height: widget._trHeight < 40 ? 40 : widget._trHeight,
-      decoration: BoxDecoration(
-        border: Border.all(color: widget._borderColor, width: widget._borderWidth)
-      ),
-      child: TextFormField(
-        textAlign: widget.tdAlignment,
-        style: widget.tdStyle,
-        initialValue: widget.cellData,
-        onFieldSubmitted: widget.onSubmitted,  
-        onChanged: widget.onChanged,
-        textAlignVertical: TextAlignVertical.center,
-        decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(left: widget.tdPaddingLeft, right: widget.tdPaddingRight, top: widget.tdPaddingTop, bottom: widget.tdPaddingBottom),
-          border: InputBorder.none),
-            )
-          ),
-        );
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 2,
+      child: Container(
+          height: widget._trHeight < 40 ? 40 : widget._trHeight,
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: widget._borderColor, width: widget._borderWidth)),
+          child: TextFormField(
+            textAlign: widget.tdAlignment,
+            style: widget.tdStyle,
+            initialValue: widget.cellData,
+            onFieldSubmitted: widget.onSubmitted,
+            onChanged: widget.onChanged,
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(
+                    left: widget.tdPaddingLeft,
+                    right: widget.tdPaddingRight,
+                    top: widget.tdPaddingTop,
+                    bottom: widget.tdPaddingBottom),
+                border: InputBorder.none),
+          )),
+    );
   }
 }
-
