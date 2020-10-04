@@ -101,7 +101,7 @@ To create a new table, use the `Editable()` widget class and provide the table d
   - `createButtonIcon`: Icon displayed in the create new row button;
   - `createButtonColor`: Color for the create new row button;   
   - `createButtonShape`:   border shape of the create new row button
-        ```dart
+        ```
         createButtonShape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8)
         )
