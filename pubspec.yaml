@@ -2,7 +2,7 @@ name: editable
 description: A new Flutter package project.
 version: 1.0.0
 author: Godwin Asuquo
-homepage:
+homepage: https://github.com/godilite/editable
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
