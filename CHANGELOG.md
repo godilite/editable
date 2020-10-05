@@ -27,3 +27,7 @@
 * fix: removes Space showing on small screen sizes if saveIcon is shown
 * compatability check passed for all OS
 * formats code based on dartfmt
+
+## [1.0.5] - 05/10/2020.
+
+* Bug Fix: table header alignments when saveRow icon is shown

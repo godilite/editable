@@ -1,7 +1,6 @@
 name: editable
 description: ⚡️A highly customizable, editable data table (spreadsheet) package for Flutter projects.
-version: 1.0.4
-author: Godwin Asuquo
+version: 1.0.5
 homepage: https://github.com/godilite/editable
 
 environment:
