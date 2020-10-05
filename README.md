@@ -30,7 +30,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.0.4"
+  editable: "^1.0.5"
 ```
 
 In your library add the following import:
@@ -128,9 +128,10 @@ To create a new table, use the `Editable()` widget class and provide the table d
 # Roadmap
 The following are immediate work In progress for the next version of the project:
 - Sortable column
-- Peform mathematic operations between columns
+- Perform mathematical operations between columns
 - Search row data
 - flexible column width customization
+- export table to different formats
 
 # Contribution
 
@@ -153,3 +154,7 @@ Here is a quick list of things to remember
 
 This Editable table package for Flutter is developed by [Godwin Asuquo](https://github.com/godilite)
 
+
+# Sponsor
+
+Care to send us a cup of coffee? or support this project? [❤️ Sponsor](https://patreon.com/godilite)
