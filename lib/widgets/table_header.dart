@@ -29,8 +29,9 @@ class THeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      flex: 1,
+    return Flexible(
+      fit: FlexFit.tight,
+      flex: 2,
       child: Padding(
         padding: EdgeInsets.only(
             left: thPaddingLeft,
