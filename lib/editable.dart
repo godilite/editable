@@ -5,9 +5,10 @@
 
 library editable;
 
-import 'package:editable/widgets/table_body.dart';
-import 'package:editable/widgets/table_header.dart';
 import 'package:flutter/material.dart';
+import 'functions/helpers.dart';
+import 'widgets/table_body.dart';
+import 'widgets/table_header.dart';
 
 class Editable extends StatefulWidget {
   /// Builds an editable table using predefined row and column counts
@@ -73,7 +74,7 @@ class Editable extends StatefulWidget {
       this.showCreateButton = false,
       this.createButtonAlign = CrossAxisAlignment.end,
       this.createButtonIcon,
-      this.createButtonColor = Colors.blueGrey,
+      this.createButtonColor,
       this.createButtonShape,
       this.createButtonLabel})
       : super(key: key);
@@ -210,7 +211,7 @@ class Editable extends StatefulWidget {
   ///   borderRadius: BorderRadius.circular(8)
   /// )
   /// ```
-  final ShapeBorder createButtonShape;
+  final BoxShape createButtonShape;
 
   /// Label for the create new row button
   final Widget createButtonLabel;
@@ -241,58 +242,51 @@ class _EditableState extends State<Editable> {
   @override
   void initState() {
     super.initState();
+    _setup();
+  }
+
+/// initial Setup of columns and row, sets count of column and row
+  _setup(){
     rowCount = rows == null || rows.isEmpty ? rowCount : rows.length;
     columnCount =
         columns == null || columns.isEmpty ? columnCount : columns.length;
+    columns = columns ?? columnBlueprint(columnCount, columns);
+    rows = rows ?? rowBlueprint(rowCount, columns, rows); 
   }
 
-  /// Generates empty columns using the specified columnCount,
-  /// if no column count is provided, it uses the [columns.length] value
-  void _columnBlueprint() {
-    var data = List.generate(
-        columnCount, (index) => {'title': '', 'index': index, 'key': ''});
-    columns = [...data];
-  }
-
-  /// Generates empty rows from rowCount values provided
-  void _rowBlueprint(int rowCount) {
-    List sampleRow = [];
-    for (var i = 0; i < rowCount; i++) {
-      var item = {};
-      columns.forEach((element) {
-        item[element['index']] = '';
-      });
-      sampleRow.add(item);
-    }
-    rows = [...sampleRow];
-  }
-
-  ///Create an empty column for saveIcon
-  Widget _iconColumn() {
-    return Visibility(
-      visible: widget.showSaveIcon,
-      child: Expanded(
-        flex: 1,
-        child: Padding(
-          padding: EdgeInsets.only(
-            left: widget.thPaddingLeft,
-            top: widget.thPaddingTop,
-            bottom: widget.thPaddingBottom,
-            right: widget.thPaddingRight,
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(crossAxisAlignment: widget.createButtonAlign, children: [
+          //Table Header
+          createButton(),
+          Container(
+            child: Row(children: _tableHeaders),
           ),
-          child: Text('asa'),
-        ),
+          Expanded(
+            flex: 1,
+            child: ListView(
+              shrinkWrap: true,
+              children: _tableRows,
+            ),
+          )
+        ]),
       ),
     );
   }
+
+
 
   /// Builds saveIcon widget
   Widget _saveIcon(index) {
     return Visibility(
       visible: widget.showSaveIcon,
-      child: Expanded(
-        flex: 1,
+      child: Flexible(
         child: IconButton(
+          padding: EdgeInsets.only(right: widget.tdPaddingRight),
+          hoverColor: Colors.transparent,
           icon: Icon(
             widget.saveIcon,
             color: widget.saveIconColor,
@@ -312,47 +306,38 @@ class _EditableState extends State<Editable> {
     );
   }
 
-  /// adds a row to existing row lists
-  void _addOneRow() {
-    var item = {};
-    columns.forEach((element) {
-      item[element['key']] = '';
-    });
-    rows.add(item);
-  }
-
   /// Button for creating a new empty row
   Widget createButton() {
     return Visibility(
       visible: widget.showCreateButton,
       child: Padding(
-        padding: EdgeInsets.only(left: 4.0, right: 4.0),
-        child: FlatButton.icon(
-            onPressed: () {
-              _addOneRow();
+        padding: EdgeInsets.only(left: 4.0),
+        child: InkWell(
+            onTap: () {
+             rows = addOneRow(columns, rows);
               rowCount++;
               setState(() {});
             },
-            icon:
-                widget.createButtonIcon ?? Icon(Icons.add, color: Colors.white),
-            color: widget.createButtonColor,
-            shape: widget.createButtonShape ??
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            label: widget.createButtonLabel ??
-                Text(
-                  'Add Row',
-                  style: TextStyle(color: Colors.white),
-                )),
+            child: Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: widget.createButtonColor ?? Colors.white,
+                  boxShadow: [BoxShadow(blurRadius: 8, 
+                  color: Colors.grey.shade400)],
+                  borderRadius: BorderRadius.circular(8),
+                shape: BoxShape.rectangle,
+              ),
+              child: widget.createButtonIcon ?? Icon(Icons.add),              
+            ),
+           ),
       ),
     );
   }
 
   /// Generates table columns
-  List<Widget> get _tableHeaders => List<Widget>.generate(columnCount, (index) {
-        // ignore: unnecessary_statements
-        columns == null || columns.isEmpty ? _columnBlueprint() : true;
+  List<Widget> get _tableHeaders => List<Widget>.generate(columnCount + 1, (index) {
         return columnCount + 1 == (index + 1)
-            ? _iconColumn()
+            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop, widget.thPaddingBottom)
             : THeader(
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
@@ -369,8 +354,6 @@ class _EditableState extends State<Editable> {
 
   /// Generates table rows
   List<Widget> get _tableRows => List<Widget>.generate(rowCount, (index) {
-        // ignore: unnecessary_statements
-        rows == null || rows.isEmpty ? _rowBlueprint(rowCount) : true;
         return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: List.generate(columnCount + 1, (rowIndex) {
@@ -411,28 +394,4 @@ class _EditableState extends State<Editable> {
                     );
             }));
       });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      child: Column(crossAxisAlignment: widget.createButtonAlign, children: [
-        //Table Header
-        createButton(),
-        Container(
-          decoration: BoxDecoration(
-              border: Border(
-                  bottom: BorderSide(
-                      width: widget.borderWidth, color: widget.borderColor))),
-          child: Row(children: _tableHeaders),
-        ),
-        Expanded(
-          flex: 10,
-          child: ListView(
-            shrinkWrap: true,
-            children: _tableRows,
-          ),
-        )
-      ]),
-    );
-  }
 }
