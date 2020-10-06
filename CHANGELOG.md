@@ -31,3 +31,9 @@
 ## [1.0.5] - 05/10/2020.
 
 * Bug Fix: table header alignments when saveRow icon is shown
+
+## [1.0.6] - 07/10/2020.
+
+* Bug Fix: Align table headers
+* Refactor: Adds helper functions
+* Change default button for createRowButton

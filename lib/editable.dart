@@ -245,13 +245,13 @@ class _EditableState extends State<Editable> {
     _setup();
   }
 
-/// initial Setup of columns and row, sets count of column and row
-  _setup(){
+  /// initial Setup of columns and row, sets count of column and row
+  _setup() {
     rowCount = rows == null || rows.isEmpty ? rowCount : rows.length;
     columnCount =
         columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
-    rows = rows ?? rowBlueprint(rowCount, columns, rows); 
+    rows = rows ?? rowBlueprint(rowCount, columns, rows);
   }
 
   @override
@@ -276,8 +276,6 @@ class _EditableState extends State<Editable> {
       ),
     );
   }
-
-
 
   /// Builds saveIcon widget
   Widget _saveIcon(index) {
@@ -313,31 +311,34 @@ class _EditableState extends State<Editable> {
       child: Padding(
         padding: EdgeInsets.only(left: 4.0),
         child: InkWell(
-            onTap: () {
-             rows = addOneRow(columns, rows);
-              rowCount++;
-              setState(() {});
-            },
-            child: Container(
-              padding: EdgeInsets.all(2),
-              decoration: BoxDecoration(
-                color: widget.createButtonColor ?? Colors.white,
-                  boxShadow: [BoxShadow(blurRadius: 8, 
-                  color: Colors.grey.shade400)],
-                  borderRadius: BorderRadius.circular(8),
-                shape: BoxShape.rectangle,
-              ),
-              child: widget.createButtonIcon ?? Icon(Icons.add),              
+          onTap: () {
+            rows = addOneRow(columns, rows);
+            rowCount++;
+            setState(() {});
+          },
+          child: Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: widget.createButtonColor ?? Colors.white,
+              boxShadow: [
+                BoxShadow(blurRadius: 8, color: Colors.grey.shade400)
+              ],
+              borderRadius: BorderRadius.circular(8),
+              shape: BoxShape.rectangle,
             ),
-           ),
+            child: widget.createButtonIcon ?? Icon(Icons.add),
+          ),
+        ),
       ),
     );
   }
 
   /// Generates table columns
-  List<Widget> get _tableHeaders => List<Widget>.generate(columnCount + 1, (index) {
+  List<Widget> get _tableHeaders =>
+      List<Widget>.generate(columnCount + 1, (index) {
         return columnCount + 1 == (index + 1)
-            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop, widget.thPaddingBottom)
+            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
+                widget.thPaddingBottom)
             : THeader(
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
