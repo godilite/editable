@@ -49,7 +49,7 @@ class _RowBuilderState extends State<RowBuilder> {
   Widget build(BuildContext context) {
     return Flexible(
       fit: FlexFit.tight,
-      flex: 2,
+      flex: 5,
       child: Container(
           height: widget._trHeight < 40 ? 40 : widget._trHeight,
           decoration: BoxDecoration(
