@@ -28,7 +28,7 @@ class RowBuilder extends StatefulWidget {
   final double _trHeight;
   final Color _borderColor;
   final double _borderWidth;
-  final String cellData;
+  final cellData;
   final TextAlign tdAlignment;
   final TextStyle tdStyle;
   final int index;
@@ -51,25 +51,26 @@ class _RowBuilderState extends State<RowBuilder> {
       fit: FlexFit.tight,
       flex: 5,
       child: Container(
-          height: widget._trHeight < 40 ? 40 : widget._trHeight,
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: widget._borderColor, width: widget._borderWidth)),
-          child: TextFormField(
-            textAlign: widget.tdAlignment,
-            style: widget.tdStyle,
-            initialValue: widget.cellData,
-            onFieldSubmitted: widget.onSubmitted,
-            onChanged: widget.onChanged,
-            textAlignVertical: TextAlignVertical.center,
-            decoration: InputDecoration(
-                contentPadding: EdgeInsets.only(
-                    left: widget.tdPaddingLeft,
-                    right: widget.tdPaddingRight,
-                    top: widget.tdPaddingTop,
-                    bottom: widget.tdPaddingBottom),
-                border: InputBorder.none),
-          )),
+        height: widget._trHeight < 40 ? 40 : widget._trHeight,
+        decoration: BoxDecoration(
+            border: Border.all(
+                color: widget._borderColor, width: widget._borderWidth)),
+        child: TextFormField(
+          textAlign: widget.tdAlignment,
+          style: widget.tdStyle,
+          initialValue: widget.cellData.toString(),
+          onFieldSubmitted: widget.onSubmitted,
+          onChanged: widget.onChanged,
+          textAlignVertical: TextAlignVertical.center,
+          decoration: InputDecoration(
+              contentPadding: EdgeInsets.only(
+                  left: widget.tdPaddingLeft,
+                  right: widget.tdPaddingRight,
+                  top: widget.tdPaddingTop,
+                  bottom: widget.tdPaddingBottom),
+              border: InputBorder.none),
+        ),
+      ),
     );
   }
 }
