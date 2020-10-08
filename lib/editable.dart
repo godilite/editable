@@ -394,6 +394,6 @@ class _EditableState extends State<Editable> {
                         }
                       },
                     );
-            }));
+            }),);
       });
 }

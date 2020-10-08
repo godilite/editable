@@ -37,3 +37,8 @@
 * Bug Fix: Align table headers
 * Refactor: Adds helper functions
 * Change default button for createRowButton
+
+## [1.0.7] - 08/10/2020.
+
+* Bug Fix: Table color set to transparent
+* This allows table to take parent widget color property
