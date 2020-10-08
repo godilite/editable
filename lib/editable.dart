@@ -257,6 +257,7 @@ class _EditableState extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(crossAxisAlignment: widget.createButtonAlign, children: [
@@ -393,6 +394,6 @@ class _EditableState extends State<Editable> {
                         }
                       },
                     );
-            }));
+            }),);
       });
 }

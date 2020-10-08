@@ -22,6 +22,13 @@ to display an empty table, or use it with predefined rows and column data sets.
 ### Spread Some :heart:
 [![GitHub followers](https://img.shields.io/github/followers/godilite.svg?style=social&label=Follow)](https://github.com/godilite)
 
+## Support us
+
+You can support us by becoming a patron on Patreon, any support is much appreciated.
+
+[![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/godilite)
+
+
 ## Getting started
 
 In the `pubspec.yaml` of your flutter project, add the following
@@ -30,7 +37,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.0.6"
+  editable: "^1.0.7"
 ```
 
 In your library add the following import:
@@ -64,9 +71,9 @@ To create a new table, use the `Editable()` widget class and provide the table d
     example:
     ```dart 
     List rows = [
-                {"name": 'James Joe', "date":'23/09/2020',"month":'June',"status":'completed'}, 
-                {"name": 'Daniel Paul', "date":'12/4/2020',"month":'March',"status":'new'}, 
-            ];
+      {"name": 'James Joe', "date":'23/09/2020',"month":'June',"status":'completed'}, 
+      {"name": 'Daniel Paul', "date":'12/4/2020',"month":'March',"status":'new'}, 
+    ];
     ```
     each objects should have its element positioned in same order as its column
 - `rowCount`: Interger value of number of rows to be generated: Optional if row data is provided
@@ -155,6 +162,7 @@ Here is a quick list of things to remember
 This Editable table package for Flutter is developed by [Godwin Asuquo](https://github.com/godilite)
 
 
-# Sponsor
 
-Care to send us a cup of coffee? or support this project? [❤️ Sponsor](https://patreon.com/godilite)
+Also, as always, please give us a star to help!
+
+
