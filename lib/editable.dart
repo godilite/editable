@@ -5,8 +5,9 @@
 
 library editable;
 
+import 'package:editable/commons/constants.dart';
 import 'package:flutter/material.dart';
-import 'functions/helpers.dart';
+import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
 import 'widgets/table_header.dart';
 
@@ -336,8 +337,8 @@ class _EditableState extends State<Editable> {
 
   /// Generates table columns
   List<Widget> get _tableHeaders =>
-      List<Widget>.generate(columnCount + 1, (index) {
-        return columnCount + 1 == (index + 1)
+      List<Widget>.generate(columnCount + iconColumnIndex, (index) {
+        return columnCount + iconColumnIndex == (index + iconColumnIndex)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
@@ -357,43 +358,44 @@ class _EditableState extends State<Editable> {
   /// Generates table rows
   List<Widget> get _tableRows => List<Widget>.generate(rowCount, (index) {
         return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(columnCount + 1, (rowIndex) {
-              List list = rows[index].values.toList();
-              var keys = rows[index].keys.toList();
-              return columnCount + 1 == (rowIndex + 1)
-                  ? _saveIcon(index)
-                  : RowBuilder(
-                      index: index,
-                      col: keys[rowIndex],
-                      trHeight: widget.trHeight,
-                      borderColor: widget.borderColor,
-                      borderWidth: widget.borderWidth,
-                      cellData: list[rowIndex],
-                      tdPaddingLeft: widget.tdPaddingLeft,
-                      tdPaddingTop: widget.tdPaddingTop,
-                      tdPaddingBottom: widget.tdPaddingBottom,
-                      tdPaddingRight: widget.tdPaddingRight,
-                      tdAlignment: widget.tdAlignment,
-                      tdStyle: widget.tdStyle,
-                      onSubmitted: widget.onSubmitted,
-                      onChanged: (value) {
-                        ///checks if row has been edited previously
-                        var result = editedRows.indexWhere((element) {
-                          return element['row'] != index ? false : true;
-                        });
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(columnCount + iconColumnIndex, (rowIndex) {
+            List list = rows[index].values.toList();
+            var keys = rows[index].keys.toList();
+            return columnCount + iconColumnIndex == (rowIndex + iconColumnIndex)
+                ? _saveIcon(index)
+                : RowBuilder(
+                    index: index,
+                    col: keys[rowIndex],
+                    trHeight: widget.trHeight,
+                    borderColor: widget.borderColor,
+                    borderWidth: widget.borderWidth,
+                    cellData: list[rowIndex],
+                    tdPaddingLeft: widget.tdPaddingLeft,
+                    tdPaddingTop: widget.tdPaddingTop,
+                    tdPaddingBottom: widget.tdPaddingBottom,
+                    tdPaddingRight: widget.tdPaddingRight,
+                    tdAlignment: widget.tdAlignment,
+                    tdStyle: widget.tdStyle,
+                    onSubmitted: widget.onSubmitted,
+                    onChanged: (value) {
+                      ///checks if row has been edited previously
+                      var result = editedRows.indexWhere((element) {
+                        return element['row'] != index ? false : true;
+                      });
 
-                        ///adds a new edited data to a temporary holder
-                        if (result != -1) {
-                          editedRows[result][keys[rowIndex]] = value;
-                        } else {
-                          var temp = {};
-                          temp['row'] = index;
-                          temp[keys[rowIndex]] = value;
-                          editedRows.add(temp);
-                        }
-                      },
-                    );
-            }),);
+                      ///adds a new edited data to a temporary holder
+                      if (result != -1) {
+                        editedRows[result][keys[rowIndex]] = value;
+                      } else {
+                        var temp = {};
+                        temp['row'] = index;
+                        temp[keys[rowIndex]] = value;
+                        editedRows.add(temp);
+                      }
+                    },
+                  );
+          }),
+        );
       });
 }
