@@ -19,6 +19,7 @@ class RowBuilder extends StatefulWidget {
     @required this.tdPaddingRight,
     @required this.onSubmitted,
     @required this.onChanged,
+    @required this.widthRatio,
   })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -29,6 +30,7 @@ class RowBuilder extends StatefulWidget {
   final Color _borderColor;
   final double _borderWidth;
   final cellData;
+  final double widthRatio;
   final TextAlign tdAlignment;
   final TextStyle tdStyle;
   final int index;
@@ -47,11 +49,13 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Flexible(
-      fit: FlexFit.tight,
-      flex: 5,
+      fit: FlexFit.loose,
+      flex: 6,
       child: Container(
         height: widget._trHeight < 40 ? 40 : widget._trHeight,
+        width: width * widget.widthRatio,
         decoration: BoxDecoration(
             border: Border.all(
                 color: widget._borderColor, width: widget._borderWidth)),
