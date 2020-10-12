@@ -51,3 +51,8 @@
 ## [1.0.9] - 12/10/2020.
 
 * Bug fix: A known behaviour where table doesnot rebuild with new data was fixed. This fix ensures that new rows can be added at runtime
+
+## [1.1.0] - 12/10/2020.
+
+* Bug fix: issues with width constraint for column element
+
