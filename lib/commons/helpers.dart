@@ -37,8 +37,8 @@ addOneRow(columns, rows) {
 Widget iconColumn(showSaveIcon, thPaddingTop, thPaddingBottom) {
   return Visibility(
     visible: showSaveIcon,
-    child: Expanded(
-      flex: 1,
+    child: Flexible(
+      fit: FlexFit.loose,
       child: Padding(
         padding: EdgeInsets.only(
           top: thPaddingTop,
