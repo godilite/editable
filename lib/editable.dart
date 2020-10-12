@@ -6,7 +6,7 @@
 library editable;
 
 import 'package:flutter/material.dart';
-import 'functions/helpers.dart';
+import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
 import 'widgets/table_header.dart';
 
@@ -48,6 +48,7 @@ class Editable extends StatefulWidget {
       {Key key,
       this.columns,
       this.rows,
+      this.columnRatio = 0.20,
       this.onSubmitted,
       this.onRowSaved,
       this.columnCount = 0,
@@ -72,7 +73,7 @@ class Editable extends StatefulWidget {
       this.tdAlignment = TextAlign.start,
       this.tdStyle,
       this.showCreateButton = false,
-      this.createButtonAlign = CrossAxisAlignment.end,
+      this.createButtonAlign = CrossAxisAlignment.start,
       this.createButtonIcon,
       this.createButtonColor,
       this.createButtonShape,
@@ -126,6 +127,12 @@ class Editable extends StatefulWidget {
   ///
   /// Optional if column data is provided
   final int columnCount;
+
+  /// aspect ration of each column,
+  /// sets the ratio of the screen width occupied by each column
+  /// it is set in fraction between 0 to 1.0
+  /// 0.8 indicates 80 percent width per column
+  final double columnRatio;
 
   /// Color of table border
   final Color borderColor;
@@ -240,66 +247,141 @@ class _EditableState extends State<Editable> {
   _EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
 
   @override
-  void initState() {
-    super.initState();
-    _setup();
-  }
-
-  /// initial Setup of columns and row, sets count of column and row
-  _setup() {
+  Widget build(BuildContext context) {
+    /// initial Setup of columns and row, sets count of column and row
     rowCount = rows == null || rows.isEmpty ? rowCount : rows.length;
     columnCount =
         columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount, columns, rows);
-  }
 
-  @override
-  Widget build(BuildContext context) {
+    /// Temporarily holds all edited rows
+    List editedRows = [];
+
+    /// Builds saveIcon widget
+    Widget _saveIcon(index) {
+      return Flexible(
+        fit: FlexFit.loose,
+        child: Visibility(
+          visible: widget.showSaveIcon,
+          child: IconButton(
+            padding: EdgeInsets.only(right: widget.tdPaddingRight),
+            hoverColor: Colors.transparent,
+            icon: Icon(
+              widget.saveIcon,
+              color: widget.saveIconColor,
+              size: widget.saveIconSize,
+            ),
+            onPressed: () {
+              int rowIndex = editedRows.indexWhere(
+                  (element) => element['row'] == index ? true : false);
+              if (rowIndex != -1) {
+                widget.onRowSaved(editedRows[rowIndex]);
+              } else {
+                widget.onRowSaved('no data changed');
+              }
+            },
+          ),
+        ),
+      );
+    }
+
+    /// Generates table columns
+    List<Widget> _tableHeaders() {
+      return List<Widget>.generate(columnCount + 1, (index) {
+        return columnCount + 1 == (index + 1)
+            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
+                widget.thPaddingBottom)
+            : THeader(
+                widthRatio: widget.columnRatio,
+                thPaddingLeft: widget.thPaddingLeft,
+                thPaddingTop: widget.thPaddingTop,
+                thPaddingBottom: widget.thPaddingBottom,
+                thPaddingRight: widget.thPaddingRight,
+                headers: columns,
+                thWeight: widget.thWeight,
+                thSize: widget.thSize,
+                index: index);
+      });
+    }
+
+    /// Generates table rows
+    List<Widget> _tableRows() {
+      return List<Widget>.generate(rowCount, (index) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: List.generate(columnCount + 1, (rowIndex) {
+            List list = rows[index].values.toList();
+            var keys = rows[index].keys.toList();
+            return columnCount + 1 == (rowIndex + 1)
+                ? _saveIcon(index)
+                : RowBuilder(
+                    index: index,
+                    col: keys[rowIndex],
+                    trHeight: widget.trHeight,
+                    borderColor: widget.borderColor,
+                    borderWidth: widget.borderWidth,
+                    cellData: list[rowIndex],
+                    tdPaddingLeft: widget.tdPaddingLeft,
+                    tdPaddingTop: widget.tdPaddingTop,
+                    tdPaddingBottom: widget.tdPaddingBottom,
+                    tdPaddingRight: widget.tdPaddingRight,
+                    tdAlignment: widget.tdAlignment,
+                    tdStyle: widget.tdStyle,
+                    onSubmitted: widget.onSubmitted,
+                    widthRatio: widget.columnRatio,
+                    onChanged: (value) {
+                      ///checks if row has been edited previously
+                      var result = editedRows.indexWhere((element) {
+                        return element['row'] != index ? false : true;
+                      });
+
+                      ///adds a new edited data to a temporary holder
+                      if (result != -1) {
+                        editedRows[result][keys[rowIndex]] = value;
+                      } else {
+                        var temp = {};
+                        temp['row'] = index;
+                        temp[keys[rowIndex]] = value;
+                        editedRows.add(temp);
+                      }
+                    },
+                  );
+          }),
+        );
+      });
+    }
+
     return Material(
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Column(crossAxisAlignment: widget.createButtonAlign, children: [
-          //Table Header
-          createButton(),
-          Container(
-            child: Row(children: _tableHeaders),
-          ),
-          Expanded(
-            flex: 1,
-            child: ListView(
-              shrinkWrap: true,
-              children: _tableRows,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child:
+              Column(crossAxisAlignment: widget.createButtonAlign, children: [
+            //Table Header
+            createButton(),
+            Container(
+              padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: widget.borderColor,
+                          width: widget.borderWidth))),
+              child: Row(
+                  mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
             ),
-          )
-        ]),
-      ),
-    );
-  }
 
-  /// Builds saveIcon widget
-  Widget _saveIcon(index) {
-    return Visibility(
-      visible: widget.showSaveIcon,
-      child: Flexible(
-        child: IconButton(
-          padding: EdgeInsets.only(right: widget.tdPaddingRight),
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            widget.saveIcon,
-            color: widget.saveIconColor,
-            size: widget.saveIconSize,
-          ),
-          onPressed: () {
-            int rowIndex = editedRows.indexWhere(
-                (element) => element['row'] == index ? true : false);
-            if (rowIndex != -1) {
-              widget.onRowSaved(editedRows[rowIndex]);
-            } else {
-              widget.onRowSaved('no edit');
-            }
-          },
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _tableRows(),
+                ),
+              ),
+            )
+          ]),
         ),
       ),
     );
@@ -310,7 +392,7 @@ class _EditableState extends State<Editable> {
     return Visibility(
       visible: widget.showCreateButton,
       child: Padding(
-        padding: EdgeInsets.only(left: 4.0),
+        padding: EdgeInsets.only(left: 4.0, bottom: 4),
         child: InkWell(
           onTap: () {
             rows = addOneRow(columns, rows);
@@ -322,9 +404,9 @@ class _EditableState extends State<Editable> {
             decoration: BoxDecoration(
               color: widget.createButtonColor ?? Colors.white,
               boxShadow: [
-                BoxShadow(blurRadius: 8, color: Colors.grey.shade400)
+                BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
               ],
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(10),
               shape: BoxShape.rectangle,
             ),
             child: widget.createButtonIcon ?? Icon(Icons.add),
@@ -333,67 +415,4 @@ class _EditableState extends State<Editable> {
       ),
     );
   }
-
-  /// Generates table columns
-  List<Widget> get _tableHeaders =>
-      List<Widget>.generate(columnCount + 1, (index) {
-        return columnCount + 1 == (index + 1)
-            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
-                widget.thPaddingBottom)
-            : THeader(
-                thPaddingLeft: widget.thPaddingLeft,
-                thPaddingTop: widget.thPaddingTop,
-                thPaddingBottom: widget.thPaddingBottom,
-                thPaddingRight: widget.thPaddingRight,
-                headers: columns,
-                thWeight: widget.thWeight,
-                thSize: widget.thSize,
-                index: index);
-      });
-
-  /// Temporarily holds all edited rows
-  List editedRows = [];
-
-  /// Generates table rows
-  List<Widget> get _tableRows => List<Widget>.generate(rowCount, (index) {
-        return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(columnCount + 1, (rowIndex) {
-              List list = rows[index].values.toList();
-              var keys = rows[index].keys.toList();
-              return columnCount + 1 == (rowIndex + 1)
-                  ? _saveIcon(index)
-                  : RowBuilder(
-                      index: index,
-                      col: keys[rowIndex],
-                      trHeight: widget.trHeight,
-                      borderColor: widget.borderColor,
-                      borderWidth: widget.borderWidth,
-                      cellData: list[rowIndex],
-                      tdPaddingLeft: widget.tdPaddingLeft,
-                      tdPaddingTop: widget.tdPaddingTop,
-                      tdPaddingBottom: widget.tdPaddingBottom,
-                      tdPaddingRight: widget.tdPaddingRight,
-                      tdAlignment: widget.tdAlignment,
-                      tdStyle: widget.tdStyle,
-                      onSubmitted: widget.onSubmitted,
-                      onChanged: (value) {
-                        ///checks if row has been edited previously
-                        var result = editedRows.indexWhere((element) {
-                          return element['row'] != index ? false : true;
-                        });
-
-                        ///adds a new edited data to a temporary holder
-                        if (result != -1) {
-                          editedRows[result][keys[rowIndex]] = value;
-                        } else {
-                          var temp = {};
-                          temp['row'] = index;
-                          temp[keys[rowIndex]] = value;
-                          editedRows.add(temp);
-                        }
-                      },
-                    );
-            }),);
-      });
 }

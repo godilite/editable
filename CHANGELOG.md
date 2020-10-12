@@ -42,3 +42,12 @@
 
 * Bug Fix: Table color set to transparent
 * This allows table to take parent widget color property
+
+## [1.0.8] - 11/10/2020.
+
+* New Feature: Horizontal and vertical scrollable
+* New Table property: [columnRatio] sets the fraction of screen width occupied by each column
+
+## [1.0.9] - 12/10/2020.
+
+* Bug fix: A known behaviour where table doesnot rebuild with new data was fixed. This fix ensures that new rows can be added at runtime

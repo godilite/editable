@@ -24,7 +24,7 @@ to display an empty table, or use it with predefined rows and column data sets.
 
 ## Support us
 
-You can support us by becoming a patron on Patreon, any support is much appreciated.
+You can buy us a cup of coffee.
 
 [![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/godilite)
 
@@ -37,7 +37,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.0.7"
+  editable: "^1.0.9"
 ```
 
 In your library add the following import:
@@ -78,6 +78,11 @@ To create a new table, use the `Editable()` widget class and provide the table d
     each objects should have its element positioned in same order as its column
 - `rowCount`: Interger value of number of rows to be generated: Optional if row data is provided
 - `columnCount`: Interger value of number of columns to be generated: Optional if column data is provided 
+- `columnRatio`: fraction of the screen width occupied by each column. This is usefull for shrinking and expanding table width
+  example: 
+  ```
+  columnRation: 0.8 //sets each column to occupy 80 percent of screen width
+  ```
 
 ### Customization
   - `borderColor`:  Color of table border
