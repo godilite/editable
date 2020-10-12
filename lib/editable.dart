@@ -247,116 +247,48 @@ class _EditableState extends State<Editable> {
   _EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
 
   @override
-  void initState() {
-    super.initState();
-    _setup();
-  }
-
-  /// initial Setup of columns and row, sets count of column and row
-  _setup() {
+  Widget build(BuildContext context) {
+    /// initial Setup of columns and row, sets count of column and row
     rowCount = rows == null || rows.isEmpty ? rowCount : rows.length;
     columnCount =
         columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount, columns, rows);
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child:
-              Column(crossAxisAlignment: widget.createButtonAlign, children: [
-            //Table Header
-            createButton(),
-            Container(
-              padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          color: widget.borderColor,
-                          width: widget.borderWidth))),
-              child:
-                  Row(mainAxisSize: MainAxisSize.min, children: _tableHeaders),
+    /// Temporarily holds all edited rows
+    List editedRows = [];
+
+    /// Builds saveIcon widget
+    Widget _saveIcon(index) {
+      return Flexible(
+        fit: FlexFit.loose,
+        child: Visibility(
+          visible: widget.showSaveIcon,
+          child: IconButton(
+            padding: EdgeInsets.only(right: widget.tdPaddingRight),
+            hoverColor: Colors.transparent,
+            icon: Icon(
+              widget.saveIcon,
+              color: widget.saveIconColor,
+              size: widget.saveIconSize,
             ),
-
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _tableRows,
-                ),
-              ),
-            )
-          ]),
-        ),
-      ),
-    );
-  }
-
-  /// Builds saveIcon widget
-  Widget _saveIcon(index) {
-    return Flexible(
-      fit: FlexFit.loose,
-      child: Visibility(
-        visible: widget.showSaveIcon,
-        child: IconButton(
-          padding: EdgeInsets.only(right: widget.tdPaddingRight),
-          hoverColor: Colors.transparent,
-          icon: Icon(
-            widget.saveIcon,
-            color: widget.saveIconColor,
-            size: widget.saveIconSize,
-          ),
-          onPressed: () {
-            int rowIndex = editedRows.indexWhere(
-                (element) => element['row'] == index ? true : false);
-            if (rowIndex != -1) {
-              widget.onRowSaved(editedRows[rowIndex]);
-            } else {
-              widget.onRowSaved('no edit');
-            }
-          },
-        ),
-      ),
-    );
-  }
-
-  /// Button for creating a new empty row
-  Widget createButton() {
-    return Visibility(
-      visible: widget.showCreateButton,
-      child: Padding(
-        padding: EdgeInsets.only(left: 4.0, bottom: 4),
-        child: InkWell(
-          onTap: () {
-            rows = addOneRow(columns, rows);
-            rowCount++;
-            setState(() {});
-          },
-          child: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: widget.createButtonColor ?? Colors.white,
-              boxShadow: [
-                BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
-              ],
-              borderRadius: BorderRadius.circular(10),
-              shape: BoxShape.rectangle,
-            ),
-            child: widget.createButtonIcon ?? Icon(Icons.add),
+            onPressed: () {
+              int rowIndex = editedRows.indexWhere(
+                  (element) => element['row'] == index ? true : false);
+              if (rowIndex != -1) {
+                widget.onRowSaved(editedRows[rowIndex]);
+              } else {
+                widget.onRowSaved('no data changed');
+              }
+            },
           ),
         ),
-      ),
-    );
-  }
+      );
+    }
 
-  /// Generates table columns
-  List<Widget> get _tableHeaders =>
-      List<Widget>.generate(columnCount + 1, (index) {
+    /// Generates table columns
+    List<Widget> _tableHeaders() {
+      return List<Widget>.generate(columnCount + 1, (index) {
         return columnCount + 1 == (index + 1)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
@@ -371,12 +303,11 @@ class _EditableState extends State<Editable> {
                 thSize: widget.thSize,
                 index: index);
       });
+    }
 
-  /// Temporarily holds all edited rows
-  List editedRows = [];
-
-  /// Generates table rows
-  List<Widget> get _tableRows => List<Widget>.generate(rowCount, (index) {
+    /// Generates table rows
+    List<Widget> _tableRows() {
+      return List<Widget>.generate(rowCount, (index) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -420,4 +351,68 @@ class _EditableState extends State<Editable> {
           }),
         );
       });
+    }
+
+    return Material(
+      color: Colors.transparent,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child:
+              Column(crossAxisAlignment: widget.createButtonAlign, children: [
+            //Table Header
+            createButton(),
+            Container(
+              padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(
+                          color: widget.borderColor,
+                          width: widget.borderWidth))),
+              child: Row(
+                  mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
+            ),
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: _tableRows(),
+                ),
+              ),
+            )
+          ]),
+        ),
+      ),
+    );
+  }
+
+  /// Button for creating a new empty row
+  Widget createButton() {
+    return Visibility(
+      visible: widget.showCreateButton,
+      child: Padding(
+        padding: EdgeInsets.only(left: 4.0, bottom: 4),
+        child: InkWell(
+          onTap: () {
+            rows = addOneRow(columns, rows);
+            rowCount++;
+            setState(() {});
+          },
+          child: Container(
+            padding: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: widget.createButtonColor ?? Colors.white,
+              boxShadow: [
+                BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
+              ],
+              borderRadius: BorderRadius.circular(10),
+              shape: BoxShape.rectangle,
+            ),
+            child: widget.createButtonIcon ?? Icon(Icons.add),
+          ),
+        ),
+      ),
+    );
+  }
 }
