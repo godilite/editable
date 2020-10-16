@@ -77,7 +77,10 @@ class Editable extends StatefulWidget {
       this.createButtonIcon,
       this.createButtonColor,
       this.createButtonShape,
-      this.createButtonLabel})
+      this.createButtonLabel,
+      this.stripeColor1 = Colors.white,
+      this.stripeColor2 = Colors.black12,
+      this.zebraStripe = false})
       : super(key: key);
 
   /// A data set to create headers
@@ -106,7 +109,7 @@ class Editable extends StatefulWidget {
   ///
   /// Can be null if empty rows are needed. else,
   /// Must be array of objects
-  /// with the following with keys matching [key] provided in the column array
+  /// with keys matching [key] provided in the column array
   ///
   /// example:
   /// ```dart
@@ -115,7 +118,8 @@ class Editable extends StatefulWidget {
   ///          {"name": 'Daniel Paul', "date":'12/4/2020',"month":'March',"status":'new'},
   ///        ];
   /// ```
-  /// each objects should have its element positioned in same order as its column
+  /// each objects DO NOT have to be positioned in same order as its column
+
   final List rows;
 
   /// Interger value of number of rows to be generated:
@@ -223,6 +227,16 @@ class Editable extends StatefulWidget {
   /// Label for the create new row button
   final Widget createButtonLabel;
 
+  /// The first row alternate color, if stripe is set to true
+  final Color stripeColor1;
+
+  /// The Second row alternate color, if stripe is set to true
+  final Color stripeColor2;
+
+  /// enable zebra-striping, set to false by default
+  /// if enabled, you can style the colors [stripeColor1] and [stripeColor2]
+  final bool zebraStripe;
+
   ///[onSubmitted] callback is triggered when the enter button is pressed on a table data cell
   /// it returns a value of the cell data
   final ValueChanged<String> onSubmitted;
@@ -249,7 +263,7 @@ class _EditableState extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-    rowCount = rows == null || rows.isEmpty ? rowCount : rows.length;
+    rowCount = rows == null || rows.isEmpty ? widget.rowCount : rows.length;
     columnCount =
         columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
@@ -278,7 +292,7 @@ class _EditableState extends State<Editable> {
               if (rowIndex != -1) {
                 widget.onRowSaved(editedRows[rowIndex]);
               } else {
-                widget.onRowSaved('no data changed');
+                widget.onRowSaved('no edit');
               }
             },
           ),
@@ -312,17 +326,20 @@ class _EditableState extends State<Editable> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: List.generate(columnCount + 1, (rowIndex) {
-            List list = rows[index].values.toList();
-            var keys = rows[index].keys.toList();
+            var ckeys = [];
+            columns.forEach((e) {
+              ckeys.add(e['key']);
+            });
+            var list = rows[index];
             return columnCount + 1 == (rowIndex + 1)
                 ? _saveIcon(index)
                 : RowBuilder(
                     index: index,
-                    col: keys[rowIndex],
+                    col: ckeys[rowIndex],
                     trHeight: widget.trHeight,
                     borderColor: widget.borderColor,
                     borderWidth: widget.borderWidth,
-                    cellData: list[rowIndex],
+                    cellData: list[ckeys[rowIndex]],
                     tdPaddingLeft: widget.tdPaddingLeft,
                     tdPaddingTop: widget.tdPaddingTop,
                     tdPaddingBottom: widget.tdPaddingBottom,
@@ -331,6 +348,9 @@ class _EditableState extends State<Editable> {
                     tdStyle: widget.tdStyle,
                     onSubmitted: widget.onSubmitted,
                     widthRatio: widget.columnRatio,
+                    zebraStripe: widget.zebraStripe,
+                    stripeColor1: widget.stripeColor1,
+                    stripeColor2: widget.stripeColor2,
                     onChanged: (value) {
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {
@@ -339,11 +359,11 @@ class _EditableState extends State<Editable> {
 
                       ///adds a new edited data to a temporary holder
                       if (result != -1) {
-                        editedRows[result][keys[rowIndex]] = value;
+                        editedRows[result][ckeys[rowIndex]] = value;
                       } else {
                         var temp = {};
                         temp['row'] = index;
-                        temp[keys[rowIndex]] = value;
+                        temp[ckeys[rowIndex]] = value;
                         editedRows.add(temp);
                       }
                     },
