@@ -20,6 +20,9 @@ class RowBuilder extends StatefulWidget {
     @required this.onSubmitted,
     @required this.onChanged,
     @required this.widthRatio,
+    @required this.stripeColor1,
+    @required this.stripeColor2,
+    @required this.zebraStripe,
   })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -39,6 +42,9 @@ class RowBuilder extends StatefulWidget {
   final double tdPaddingTop;
   final double tdPaddingBottom;
   final double tdPaddingRight;
+  final Color stripeColor1;
+  final Color stripeColor2;
+  final bool zebraStripe;
   final ValueChanged<String> onSubmitted;
   final ValueChanged<String> onChanged;
 
@@ -67,6 +73,10 @@ class _RowBuilderState extends State<RowBuilder> {
           onChanged: widget.onChanged,
           textAlignVertical: TextAlignVertical.center,
           decoration: InputDecoration(
+              filled: widget.zebraStripe,
+              fillColor: widget.index % 2 == 1.0
+                  ? widget.stripeColor2
+                  : widget.stripeColor1,
               contentPadding: EdgeInsets.only(
                   left: widget.tdPaddingLeft,
                   right: widget.tdPaddingRight,

@@ -18,13 +18,16 @@ to display an empty table, or use it with predefined rows and column data sets.
 * Create Empty tables
 * Customizable Save button
 * Customize Table headers
+* Zebra - Stripe table
+* Style table border
+
 
 ### Spread Some :heart:
 [![GitHub followers](https://img.shields.io/github/followers/godilite.svg?style=social&label=Follow)](https://github.com/godilite)
 
 ## Support us
 
-You can buy us a cup of coffee.
+You can buy us a cup of coffee. Sponsor our next milestones
 
 [![Patreon](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/godilite)
 
@@ -37,7 +40,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.1.0"
+  editable: "^1.1.1"
 ```
 
 In your library add the following import:
@@ -65,23 +68,24 @@ To create a new table, use the `Editable()` widget class and provide the table d
     
      [index] represents a unique id for each column of type [int]
     
-     [key] an identifyer preferably a short string
+     [key] an identifyer preferably without space and special characters
 
 - `rows`: an array of objects, where each object key represents a column [key],
-    example:
-    ```dart 
+  example:
+    ```dart
     List rows = [
-      {"name": 'James Joe', "date":'23/09/2020',"month":'June',"status":'completed'}, 
-      {"name": 'Daniel Paul', "date":'12/4/2020',"month":'March',"status":'new'}, 
-    ];
+        {"name": 'James Joe', "date":'23/09/2020',"month":'June',"status":'completed'},
+        {"date":'12/4/2020',"month":'March',"name": 'Daniel Paul', "status":'new'},
+      ];
     ```
-    each objects should have its element positioned in same order as its column
+  Each objects *DO NOT* have to be positioned in same order as its column
+ 
 - `rowCount`: Interger value of number of rows to be generated: Optional if row data is provided
 - `columnCount`: Interger value of number of columns to be generated: Optional if column data is provided 
 - `columnRatio`: fraction of the screen width occupied by each column. This is usefull for shrinking and expanding table width
   example: 
-  ```
-  columnRation: 0.8 //sets each column to occupy 80 percent of screen width
+  ```dart
+    columnRation: 0.2 //sets each column to occupy 20 percent of screen width
   ```
 
 ### Customization
@@ -109,6 +113,11 @@ To create a new table, use the `Editable()` widget class and provide the table d
   - `saveIconColor`: Color for the save Icon
   - `saveIconSize`:   Size for the saveIcon
   - `showCreateButton`:  displays a button that adds a new row onPressed
+  - `stripeColor1`: The first row alternate color, if stripe is set to true
+  - `stripeColor2`:     The Second row alternate color, if stripe is set to true;
+  
+   - `zebraStripe`: Enable zebra-striping, set to false by default
+      ```// if zebraStripe is enabled, you can style the colors [stripeColor1] and [stripeColor2]```
   - `createButtonAlign`: Aligns the button for adding new rows;
   - `createButtonIcon`: Icon displayed in the create new row button;
   - `createButtonColor`: Color for the create new row button;   
@@ -130,20 +139,21 @@ To create a new table, use the `Editable()` widget class and provide the table d
    returns only values if row is edited, otherwise returns a string ['no edit']
 
 # Screenshots
-### Editable Table with Data
-![Editable Table with Data](https://user-images.githubusercontent.com/41484542/95015473-0321f800-0645-11eb-8618-91de4cf87984.png)
-### Empty SpreadSheet
-![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/95015511-35cbf080-0645-11eb-9ca2-8a41cb89d348.png)
+### Editable Table with Data (zebraStripe)
+![Editable Table with Data](https://user-images.githubusercontent.com/41484542/96218374-85cb8100-0f7c-11eb-9bd3-f3154073d747.png)
+### Empty SpreadSheet (zebraStripe)
+![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/96218512-caefb300-0f7c-11eb-93e1-77fd66f7cc2b.png)
+### Empty SpreadSheet (No Stripe)
+![Empty Sheet](https://user-images.githubusercontent.com/41484542/96218567-e490fa80-0f7c-11eb-8df1-03aebd4b4ee4.png)
 ### Table with Save Icon
 ![Table with save icons](https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png)
 
 # Roadmap
 The following are immediate work In progress for the next version of the project:
 - Sortable column
-- Perform mathematical operations between columns
-- Search row data
-- flexible column width customization
-- export table to different formats
+- Perform mathematical operations between columns (WIP)
+- Search row data (WIP)
+- Export table to different formats
 
 # Contribution
 
@@ -165,8 +175,6 @@ Here is a quick list of things to remember
 # Author
 
 This Editable table package for Flutter is developed by [Godwin Asuquo](https://github.com/godilite)
-
-
 
 Also, as always, please give us a star to help!
 

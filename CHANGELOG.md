@@ -56,3 +56,9 @@
 
 * Bug fix: issues with width constraint for column element
 
+## [1.1.1] - 12/10/2020.
+
+* New feature: Zebra stripe table rows
+* Set prefered colors for zebra striping
+* Order row data to column [key] parameter 
+
