@@ -160,6 +160,12 @@ The following are immediate work In progress for the next version of the project
 - Search row data 
 - Export table to different formats
 
+# Tutorials
+The Following are resources to help you build with Editable: 
+- [Creating Editable Tables With Flutter](https://medium.com/swlh/creating-editable-tables-with-flutter-5536b593c29a)
+- [Keeping it local: Managing a Flutter app's data (Andrew Fitz Gibbon)](https://www.youtube.com/watch?v=xjhxm3foCMk&t=2743s)
+
+
 # Contribution
 
 I highly encourage the community to step forward and improve this
