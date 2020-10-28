@@ -87,20 +87,24 @@ class Editable extends StatefulWidget {
   ///
   /// Can be null if blank columns are needed, else:
   /// Must be array of objects
-  /// with the following keys: [title], [index] and [key]
+  /// with the following keys: [title], [widthFactor] and [key]
   ///
   /// example:
   /// ```dart
   /// List cols = [
-  ///   {"title":'Name', 'index': 1, 'key':'name'},
-  ///   {"title":'Date', 'index': 2, 'key':'date'},
-  ///   {"title":'Month', 'index': 3, 'key':'month'},
-  ///   {"title":'Status', 'index': 4, 'key':'status'},
+  ///   {"title":'Name', 'widthFactor': 0.1, 'key':'name'},
+  ///   {"title":'Date', 'widthFactor': 0.2, 'key':'date'},
+  ///   {"title":'Month', 'widthFactor': 0.1, 'key':'month'},
+  ///   {"title":'Status', 'widthFactor': 0.1, 'key':'status'},
   /// ];
   /// ```
   /// [title] is the column heading
   ///
-  /// [index] represents a unique id for each column of type [int]
+  /// [widthFactor] a custom size ratio of each column width, if not provided, defaults to  [columnRatio = 0.20]
+  /// ```dart
+  /// 'widthFactor': 0.1 //gives 10% of screen size to the column
+  /// 'widthFactor': 0.2 //gives 20% of screen size to the column
+  /// ```
   ///
   /// [key] an identifyer preferably a short string
   final List columns;
@@ -307,7 +311,9 @@ class _EditableState extends State<Editable> {
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: widget.columnRatio,
+                widthRatio: columns[index]['widthFactor'] != null
+                    ? columns[index]['widthFactor'].toDouble()
+                    : widget.columnRatio,
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
                 thPaddingBottom: widget.thPaddingBottom,
@@ -327,8 +333,10 @@ class _EditableState extends State<Editable> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: List.generate(columnCount + 1, (rowIndex) {
             var ckeys = [];
+            var cwidths = [];
             columns.forEach((e) {
               ckeys.add(e['key']);
+              cwidths.add(e['widthFactor'] ?? widget.columnRatio);
             });
             var list = rows[index];
             return columnCount + 1 == (rowIndex + 1)
@@ -347,7 +355,7 @@ class _EditableState extends State<Editable> {
                     tdAlignment: widget.tdAlignment,
                     tdStyle: widget.tdStyle,
                     onSubmitted: widget.onSubmitted,
-                    widthRatio: widget.columnRatio,
+                    widthRatio: cwidths[rowIndex].toDouble(),
                     zebraStripe: widget.zebraStripe,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,

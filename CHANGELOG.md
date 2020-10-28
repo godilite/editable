@@ -62,3 +62,9 @@
 * Set prefered colors for zebra striping
 * Order row data to column [key] parameter 
 
+## [1.1.2] - 28/10/2020.
+
+* New feature: Adjustable Column width
+* Replaced the [index] parameter of the column with [widthFactor]
+* [widthFactor] is a double, used to assign percentage width to each column
+
