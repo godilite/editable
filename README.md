@@ -20,6 +20,7 @@ to display an empty table, or use it with predefined rows and column data sets.
 * Customize Table headers
 * Zebra - Stripe table
 * Style table border
+* Adjustable Column widths
 
 
 ### Spread Some :heart:
@@ -40,7 +41,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.1.1"
+  editable: "^1.1.2"
 ```
 
 In your library add the following import:
@@ -58,15 +59,19 @@ To create a new table, use the `Editable()` widget class and provide the table d
      example:
      ```dart 
      List cols = [
-       {"title":'Name', 'index': 1, 'key':'name'},
-       {"title":'Date', 'index': 2, 'key':'date'},
-       {"title":'Month', 'index': 3, 'key':'month'},
-       {"title":'Status', 'index': 4, 'key':'status'},
+       {"title":'Name', 'widthFactor': 0.2, 'key':'name'},
+       {"title":'Date', 'widthFactor': 0.1, 'key':'date'},
+       {"title":'Month', 'widthFactor': 0.1, 'key':'month'},
+       {"title":'Status',  'key':'status'},
      ]; 
      ```
      [title] is the column heading
     
-     [index] represents a unique id for each column of type [int]
+     [widthFactor] a custom size ratio of each column width, if not provided, defaults to  [columnRatio = 0.20]
+      ```dart
+      'widthFactor': 0.1 //gives 10% of screen size to the column
+      'widthFactor': 0.2 //gives 20% of screen size to the column
+      ```
     
      [key] an identifyer preferably without space and special characters
 
@@ -151,8 +156,8 @@ To create a new table, use the `Editable()` widget class and provide the table d
 # Roadmap
 The following are immediate work In progress for the next version of the project:
 - Sortable column
-- Perform mathematical operations between columns (WIP)
-- Search row data (WIP)
+- Perform mathematical operations between columns
+- Search row data 
 - Export table to different formats
 
 # Contribution

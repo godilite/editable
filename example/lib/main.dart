@@ -58,10 +58,10 @@ class _MyHomePageState extends State<MyHomePage> {
     },
   ];
   List cols = [
-    {"title": 'Name', 'index': 1, 'key': 'name'},
-    {"title": 'Date', 'index': 2, 'key': 'date'},
-    {"title": 'Month', 'index': 3, 'key': 'month'},
-    {"title": 'Status', 'index': 4, 'key': 'status'},
+    {"title": 'Name', 'widthFactor': 0.2, 'key': 'name'},
+    {"title": 'Date', 'widthFactor': 0.1, 'key': 'date'},
+    {"title": 'Month', 'widthFactor': 0.1, 'key': 'month'},
+    {"title": 'Status', 'key': 'status'},
   ];
 
   @override
