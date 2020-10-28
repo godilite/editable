@@ -153,12 +153,6 @@ To create a new table, use the `Editable()` widget class and provide the table d
 ### Table with Save Icon
 ![Table with save icons](https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png)
 
-# Roadmap
-The following are immediate work In progress for the next version of the project:
-- Sortable column
-- Perform mathematical operations between columns
-- Search row data 
-- Export table to different formats
 
 # Tutorials
 The Following are resources to help you build with Editable: 
