@@ -41,7 +41,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.1.2"
+  editable: "^1.1.3"
 ```
 
 In your library add the following import:
@@ -143,6 +143,63 @@ To create a new table, use the `Editable()` widget class and provide the table d
 - `onRowSaved`: [onRowSaved] callback is triggered when a [saveButton] is pressed.
    returns only values if row is edited, otherwise returns a string ['no edit']
 
+- `EditableState` key: To get all Edited Rows outside the current context, you can access the editable state using a GlobalKey,
+  example:
+  ```dart
+       /// Create a Key for EditableState
+      final _editableKey = GlobalKey<EditableState>(); 
+
+    
+      /// Function to add a new row
+      /// Using the global key assigined to Editable widget
+      /// Access the current state of Editable
+      void _addNewRow() {
+        setState(() {
+          _editableKey.currentState.createRow();
+        });
+      }
+
+      ///Print only edited rows.
+      void _printEditedRows() {
+        List editedRows = _editableKey.currentState.editedRows;
+        print(editedRows);
+      }
+
+        @override
+      Widget build(BuildContext context) {
+        return Scaffold(
+          appBar: AppBar(
+            leadingWidth: 200,
+            leading: FlatButton.icon(
+                onPressed: () => _addNewRow(),
+                icon: Icon(Icons.add),
+                label: Text(
+                  'Add',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
+            title: Text(widget.title),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FlatButton(
+                    onPressed: () => _printEditedRows(),
+                    child: Text('Print Edited Rows',
+                        style: TextStyle(fontWeight: FontWeight.bold))),
+              )
+            ],
+          ),
+          body: Editable(
+            key: _editableKey, //Assign Key to Widget
+            columns: cols,
+            rows: rows,
+            zebraStripe: true,
+            stripeColor2: Colors.grey[200],
+            borderColor: Colors.blueGrey,
+          ),
+        );
+      }
+
+  ```
 # Screenshots
 ### Editable Table with Data (zebraStripe)
 ![Editable Table with Data](https://user-images.githubusercontent.com/41484542/96218374-85cb8100-0f7c-11eb-9bd3-f3154073d747.png)
