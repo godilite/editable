@@ -250,19 +250,27 @@ class Editable extends StatefulWidget {
   final ValueChanged<dynamic> onRowSaved;
 
   @override
-  _EditableState createState() => _EditableState(
+  EditableState createState() => EditableState(
       rows: this.rows,
       columns: this.columns,
       rowCount: this.rowCount,
       columnCount: this.columnCount);
 }
 
-class _EditableState extends State<Editable> {
+class EditableState extends State<Editable> {
   List rows, columns;
   int columnCount;
   int rowCount;
 
-  _EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
+  ///Get all edited rows
+  List get editedRows => _editedRows;
+
+  ///Create a row after the last row
+  createRow() => addOneRow(columns, rows);
+  EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
+
+  /// Temporarily holds all edited rows
+  List _editedRows = [];
 
   @override
   Widget build(BuildContext context) {
@@ -272,9 +280,6 @@ class _EditableState extends State<Editable> {
         columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount, columns, rows);
-
-    /// Temporarily holds all edited rows
-    List editedRows = [];
 
     /// Builds saveIcon widget
     Widget _saveIcon(index) {

@@ -68,3 +68,8 @@
 * Replaced the [index] parameter of the column with [widthFactor]
 * [widthFactor] is a double, used to assign percentage width to each column
 
+## [1.1.3] - 04/11/2020.
+
+* New feature: Use GlobalKey State to get edited row data
+* New feature: Use GlobalKey State to create new row
+* This enable creating row and saving edited rows anywhere outside the Editable widget

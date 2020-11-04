@@ -31,6 +31,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  /// Create a Key for EditableState
+  final _editableKey = GlobalKey<EditableState>();
+
   List rows = [
     {
       "name": 'James Joe',
@@ -59,18 +62,51 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
   List cols = [
     {"title": 'Name', 'widthFactor': 0.2, 'key': 'name'},
-    {"title": 'Date', 'widthFactor': 0.1, 'key': 'date'},
-    {"title": 'Month', 'widthFactor': 0.1, 'key': 'month'},
+    {"title": 'Date', 'widthFactor': 0.2, 'key': 'date'},
+    {"title": 'Month', 'widthFactor': 0.2, 'key': 'month'},
     {"title": 'Status', 'key': 'status'},
   ];
+
+  /// Function to add a new row
+  /// Using the global key assigined to Editable widget
+  /// Access the current state of Editable
+  void _addNewRow() {
+    setState(() {
+      _editableKey.currentState.createRow();
+    });
+  }
+
+  ///Print only edited rows.
+  void _printEditedRows() {
+    List editedRows = _editableKey.currentState.editedRows;
+    print(editedRows);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leadingWidth: 200,
+        leading: FlatButton.icon(
+            onPressed: () => _addNewRow(),
+            icon: Icon(Icons.add),
+            label: Text(
+              'Add',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
         title: Text(widget.title),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FlatButton(
+                onPressed: () => _printEditedRows(),
+                child: Text('Print Edited Rows',
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+          )
+        ],
       ),
       body: Editable(
+        key: _editableKey,
         columns: cols,
         rows: rows,
         zebraStripe: true,
