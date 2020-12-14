@@ -55,12 +55,12 @@ class Editable extends StatefulWidget {
       this.rowCount = 0,
       this.borderColor = Colors.grey,
       this.tdPaddingLeft = 8.0,
-      this.tdPaddingTop = 0.0,
-      this.tdPaddingRight = 0.0,
-      this.tdPaddingBottom = 10.0,
-      this.thPaddingLeft = 10.0,
+      this.tdPaddingTop = 8.0,
+      this.tdPaddingRight = 8.0,
+      this.tdPaddingBottom = 12.0,
+      this.thPaddingLeft = 8.0,
       this.thPaddingTop = 0.0,
-      this.thPaddingRight = 0.0,
+      this.thPaddingRight = 8.0,
       this.thPaddingBottom = 0.0,
       this.trHeight = 50.0,
       this.borderWidth = 0.5,
@@ -80,7 +80,8 @@ class Editable extends StatefulWidget {
       this.createButtonLabel,
       this.stripeColor1 = Colors.white,
       this.stripeColor2 = Colors.black12,
-      this.zebraStripe = false})
+      this.zebraStripe = false,
+      this.focusedBorder})
       : super(key: key);
 
   /// A data set to create headers
@@ -92,9 +93,9 @@ class Editable extends StatefulWidget {
   /// example:
   /// ```dart
   /// List cols = [
-  ///   {"title":'Name', 'widthFactor': 0.1, 'key':'name'},
+  ///   {"title":'Name', 'widthFactor': 0.1, 'key':'name', 'editable': false},
   ///   {"title":'Date', 'widthFactor': 0.2, 'key':'date'},
-  ///   {"title":'Month', 'widthFactor': 0.1, 'key':'month'},
+  ///   {"title":'Month', 'widthFactor': 0.1, 'key':'month', 'editable': false},
   ///   {"title":'Status', 'widthFactor': 0.1, 'key':'status'},
   /// ];
   /// ```
@@ -106,7 +107,8 @@ class Editable extends StatefulWidget {
   /// 'widthFactor': 0.2 //gives 20% of screen size to the column
   /// ```
   ///
-  /// [key] an identifyer preferably a short string
+  /// [key] an identifier preferably a short string
+  /// [editable] a boolean, if the column should be editable or not, [true] by default.
   final List columns;
 
   /// A data set to create rows
@@ -241,6 +243,8 @@ class Editable extends StatefulWidget {
   /// if enabled, you can style the colors [stripeColor1] and [stripeColor2]
   final bool zebraStripe;
 
+  final InputBorder focusedBorder;
+
   ///[onSubmitted] callback is triggered when the enter button is pressed on a table data cell
   /// it returns a value of the cell data
   final ValueChanged<String> onSubmitted;
@@ -339,9 +343,11 @@ class EditableState extends State<Editable> {
           children: List.generate(columnCount + 1, (rowIndex) {
             var ckeys = [];
             var cwidths = [];
+            var ceditable = <bool>[];
             columns.forEach((e) {
               ckeys.add(e['key']);
               cwidths.add(e['widthFactor'] ?? widget.columnRatio);
+              ceditable.add(e['editable'] ?? true);
             });
             var list = rows[index];
             return columnCount + 1 == (rowIndex + 1)
@@ -361,7 +367,9 @@ class EditableState extends State<Editable> {
                     tdStyle: widget.tdStyle,
                     onSubmitted: widget.onSubmitted,
                     widthRatio: cwidths[rowIndex].toDouble(),
+                    isEditable: ceditable[rowIndex],
                     zebraStripe: widget.zebraStripe,
+                    focusedBorder: widget.focusedBorder,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
                     onChanged: (value) {
