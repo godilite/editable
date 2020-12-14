@@ -61,7 +61,7 @@ class _MyHomePageState extends State<MyHomePage> {
     },
   ];
   List cols = [
-    {"title": 'Name', 'widthFactor': 0.2, 'key': 'name'},
+    {"title": 'Name', 'widthFactor': 0.2, 'key': 'name', 'editable': false},
     {"title": 'Date', 'widthFactor': 0.2, 'key': 'date'},
     {"title": 'Month', 'widthFactor': 0.2, 'key': 'month'},
     {"title": 'Status', 'key': 'status'},
@@ -121,6 +121,13 @@ class _MyHomePageState extends State<MyHomePage> {
         showSaveIcon: true,
         saveIconColor: Colors.black,
         showCreateButton: true,
+        tdPaddingTop: 0,
+        tdPaddingBottom: 14,
+        tdPaddingLeft: 10,
+        tdPaddingRight: 8,
+        focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue),
+            borderRadius: BorderRadius.all(Radius.circular(0))),
       ),
     );
   }
