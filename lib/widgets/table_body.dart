@@ -17,6 +17,7 @@ class RowBuilder extends StatefulWidget {
     @required this.tdPaddingTop,
     @required this.tdPaddingBottom,
     @required this.tdPaddingRight,
+    @required this.tdEditableMaxLines,
     @required this.onSubmitted,
     @required this.onChanged,
     @required this.widthRatio,
@@ -45,6 +46,7 @@ class RowBuilder extends StatefulWidget {
   final double tdPaddingTop;
   final double tdPaddingBottom;
   final double tdPaddingRight;
+  final int tdEditableMaxLines;
   final Color stripeColor1;
   final Color stripeColor2;
   final bool zebraStripe;
@@ -80,6 +82,7 @@ class _RowBuilderState extends State<RowBuilder> {
                 onFieldSubmitted: widget.onSubmitted,
                 onChanged: widget.onChanged,
                 textAlignVertical: TextAlignVertical.center,
+                maxLines: widget.tdEditableMaxLines,
                 decoration: InputDecoration(
                   filled: widget.zebraStripe,
                   fillColor: widget.index % 2 == 1.0
