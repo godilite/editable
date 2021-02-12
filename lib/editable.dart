@@ -172,7 +172,7 @@ class Editable extends StatefulWidget {
   /// Style the table data
   final TextStyle tdStyle;
 
-  /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden)
+  /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden), setting to 100 will allow wrapping and not increase row size
   final int tdEditableMaxLines;
 
   /// Table header cell padding left
