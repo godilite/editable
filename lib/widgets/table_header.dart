@@ -4,17 +4,17 @@ class THeader extends StatelessWidget {
   ///Builds elements for the table headers
   const THeader(
       {Key key,
-        @required this.thPaddingLeft,
-        @required this.thPaddingTop,
-        @required this.thPaddingBottom,
-        @required this.thPaddingRight,
-        @required List headers,
-        @required this.thAlignment,
-        @required this.thStyle,
-        @required FontWeight thWeight,
-        @required double thSize,
-        @required double widthRatio,
-        @required int index})
+      @required this.thPaddingLeft,
+      @required this.thPaddingTop,
+      @required this.thPaddingBottom,
+      @required this.thPaddingRight,
+      @required List headers,
+      @required this.thAlignment,
+      @required this.thStyle,
+      @required FontWeight thWeight,
+      @required double thSize,
+      @required double widthRatio,
+      @required int index})
       : _headers = headers,
         _thWeight = thWeight,
         _thSize = thSize,
