@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List rows = [
     {
-      "name": 'James Joe',
+      "name": 'James LongName Joe',
       "date": '23/09/2020',
       "month": 'June',
       "status": 'completed'
@@ -110,6 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
         columns: cols,
         rows: rows,
         zebraStripe: true,
+        stripeColor1: Colors.blue[50],
         stripeColor2: Colors.grey[200],
         onRowSaved: (value) {
           print(value);
@@ -118,9 +119,17 @@ class _MyHomePageState extends State<MyHomePage> {
           print(value);
         },
         borderColor: Colors.blueGrey,
+        tdStyle: TextStyle( fontWeight: FontWeight.bold ),
+        trHeight: 80,
+        thStyle: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
+        thAlignment: TextAlign.center,
+        thVertAlignment: CrossAxisAlignment.end,
+        thPaddingBottom: 3,
         showSaveIcon: true,
         saveIconColor: Colors.black,
         showCreateButton: true,
+        tdAlignment: TextAlign.left,
+        tdEditableMaxLines: 100,  // don't limit and allow data to wrap
         tdPaddingTop: 0,
         tdPaddingBottom: 14,
         tdPaddingLeft: 10,
