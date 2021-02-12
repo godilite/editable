@@ -46,42 +46,45 @@ class Editable extends StatefulWidget {
   /// ```
   Editable(
       {Key key,
-      this.columns,
-      this.rows,
-      this.columnRatio = 0.20,
-      this.onSubmitted,
-      this.onRowSaved,
-      this.columnCount = 0,
-      this.rowCount = 0,
-      this.borderColor = Colors.grey,
-      this.tdPaddingLeft = 8.0,
-      this.tdPaddingTop = 8.0,
-      this.tdPaddingRight = 8.0,
-      this.tdPaddingBottom = 12.0,
-      this.thPaddingLeft = 8.0,
-      this.thPaddingTop = 0.0,
-      this.thPaddingRight = 8.0,
-      this.thPaddingBottom = 0.0,
-      this.trHeight = 50.0,
-      this.borderWidth = 0.5,
-      this.thWeight = FontWeight.w600,
-      this.thSize = 18,
-      this.showSaveIcon = false,
-      this.saveIcon = Icons.save,
-      this.saveIconColor = Colors.black12,
-      this.saveIconSize = 18,
-      this.tdAlignment = TextAlign.start,
-      this.tdStyle,
-      this.showCreateButton = false,
-      this.createButtonAlign = CrossAxisAlignment.start,
-      this.createButtonIcon,
-      this.createButtonColor,
-      this.createButtonShape,
-      this.createButtonLabel,
-      this.stripeColor1 = Colors.white,
-      this.stripeColor2 = Colors.black12,
-      this.zebraStripe = false,
-      this.focusedBorder})
+        this.columns,
+        this.rows,
+        this.columnRatio = 0.20,
+        this.onSubmitted,
+        this.onRowSaved,
+        this.columnCount = 0,
+        this.rowCount = 0,
+        this.borderColor = Colors.grey,
+        this.tdPaddingLeft = 8.0,
+        this.tdPaddingTop = 8.0,
+        this.tdPaddingRight = 8.0,
+        this.tdPaddingBottom = 12.0,
+        this.thPaddingLeft = 8.0,
+        this.thPaddingTop = 0.0,
+        this.thPaddingRight = 8.0,
+        this.thPaddingBottom = 0.0,
+        this.trHeight = 50.0,
+        this.borderWidth = 0.5,
+        this.thWeight = FontWeight.w600,
+        this.thSize = 18,
+        this.showSaveIcon = false,
+        this.saveIcon = Icons.save,
+        this.saveIconColor = Colors.black12,
+        this.saveIconSize = 18,
+        this.tdAlignment = TextAlign.start,
+        this.tdStyle,
+        this.thAlignment = TextAlign.start,
+        this.thStyle,
+        this.thVertAlignment = CrossAxisAlignment.center,
+        this.showCreateButton = false,
+        this.createButtonAlign = CrossAxisAlignment.start,
+        this.createButtonIcon,
+        this.createButtonColor,
+        this.createButtonShape,
+        this.createButtonLabel,
+        this.stripeColor1 = Colors.white,
+        this.stripeColor2 = Colors.black12,
+        this.zebraStripe = false,
+        this.focusedBorder})
       : super(key: key);
 
   /// A data set to create headers
@@ -180,15 +183,24 @@ class Editable extends StatefulWidget {
   /// Table header cell padding bottom
   final double thPaddingBottom;
 
+  /// Aligns the table header
+  final TextAlign thAlignment;
+
+  /// Style the table header - use for more control of header style, using this OVERRIDES the thWeight and thSize parameters and those will be ignored.
+  final TextStyle thStyle;
+
+  /// Table headers fontweight (use thStyle for more control of header style)
+  final FontWeight thWeight;
+
+  /// Table header label vertical alignment
+  final CrossAxisAlignment thVertAlignment;
+
+  /// Table headers fontSize  (use thStyle for more control of header style)
+  final double thSize;
+
   /// Table Row Height
   /// cannot be less than 40.0
   final double trHeight;
-
-  /// Table headers fontweight
-  final FontWeight thWeight;
-
-  /// Table headers fontSize
-  final double thSize;
 
   /// Toogles the save button,
   /// if [true] displays an icon to save rows,
@@ -281,7 +293,7 @@ class EditableState extends State<Editable> {
     /// initial Setup of columns and row, sets count of column and row
     rowCount = rows == null || rows.isEmpty ? widget.rowCount : rows.length;
     columnCount =
-        columns == null || columns.isEmpty ? columnCount : columns.length;
+    columns == null || columns.isEmpty ? columnCount : columns.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount, columns, rows);
 
@@ -301,7 +313,7 @@ class EditableState extends State<Editable> {
             ),
             onPressed: () {
               int rowIndex = editedRows.indexWhere(
-                  (element) => element['row'] == index ? true : false);
+                      (element) => element['row'] == index ? true : false);
               if (rowIndex != -1) {
                 widget.onRowSaved(editedRows[rowIndex]);
               } else {
@@ -318,19 +330,21 @@ class EditableState extends State<Editable> {
       return List<Widget>.generate(columnCount + 1, (index) {
         return columnCount + 1 == (index + 1)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
-                widget.thPaddingBottom)
+            widget.thPaddingBottom)
             : THeader(
-                widthRatio: columns[index]['widthFactor'] != null
-                    ? columns[index]['widthFactor'].toDouble()
-                    : widget.columnRatio,
-                thPaddingLeft: widget.thPaddingLeft,
-                thPaddingTop: widget.thPaddingTop,
-                thPaddingBottom: widget.thPaddingBottom,
-                thPaddingRight: widget.thPaddingRight,
-                headers: columns,
-                thWeight: widget.thWeight,
-                thSize: widget.thSize,
-                index: index);
+            widthRatio: columns[index]['widthFactor'] != null
+                ? columns[index]['widthFactor'].toDouble()
+                : widget.columnRatio,
+            thAlignment: widget.thAlignment,
+            thStyle: widget.thStyle,
+            thPaddingLeft: widget.thPaddingLeft,
+            thPaddingTop: widget.thPaddingTop,
+            thPaddingBottom: widget.thPaddingBottom,
+            thPaddingRight: widget.thPaddingRight,
+            headers: columns,
+            thWeight: widget.thWeight,
+            thSize: widget.thSize,
+            index: index);
       });
     }
 
@@ -353,42 +367,42 @@ class EditableState extends State<Editable> {
             return columnCount + 1 == (rowIndex + 1)
                 ? _saveIcon(index)
                 : RowBuilder(
-                    index: index,
-                    col: ckeys[rowIndex],
-                    trHeight: widget.trHeight,
-                    borderColor: widget.borderColor,
-                    borderWidth: widget.borderWidth,
-                    cellData: list[ckeys[rowIndex]],
-                    tdPaddingLeft: widget.tdPaddingLeft,
-                    tdPaddingTop: widget.tdPaddingTop,
-                    tdPaddingBottom: widget.tdPaddingBottom,
-                    tdPaddingRight: widget.tdPaddingRight,
-                    tdAlignment: widget.tdAlignment,
-                    tdStyle: widget.tdStyle,
-                    onSubmitted: widget.onSubmitted,
-                    widthRatio: cwidths[rowIndex].toDouble(),
-                    isEditable: ceditable[rowIndex],
-                    zebraStripe: widget.zebraStripe,
-                    focusedBorder: widget.focusedBorder,
-                    stripeColor1: widget.stripeColor1,
-                    stripeColor2: widget.stripeColor2,
-                    onChanged: (value) {
-                      ///checks if row has been edited previously
-                      var result = editedRows.indexWhere((element) {
-                        return element['row'] != index ? false : true;
-                      });
+              index: index,
+              col: ckeys[rowIndex],
+              trHeight: widget.trHeight,
+              borderColor: widget.borderColor,
+              borderWidth: widget.borderWidth,
+              cellData: list[ckeys[rowIndex]],
+              tdPaddingLeft: widget.tdPaddingLeft,
+              tdPaddingTop: widget.tdPaddingTop,
+              tdPaddingBottom: widget.tdPaddingBottom,
+              tdPaddingRight: widget.tdPaddingRight,
+              tdAlignment: widget.tdAlignment,
+              tdStyle: widget.tdStyle,
+              onSubmitted: widget.onSubmitted,
+              widthRatio: cwidths[rowIndex].toDouble(),
+              isEditable: ceditable[rowIndex],
+              zebraStripe: widget.zebraStripe,
+              focusedBorder: widget.focusedBorder,
+              stripeColor1: widget.stripeColor1,
+              stripeColor2: widget.stripeColor2,
+              onChanged: (value) {
+                ///checks if row has been edited previously
+                var result = editedRows.indexWhere((element) {
+                  return element['row'] != index ? false : true;
+                });
 
-                      ///adds a new edited data to a temporary holder
-                      if (result != -1) {
-                        editedRows[result][ckeys[rowIndex]] = value;
-                      } else {
-                        var temp = {};
-                        temp['row'] = index;
-                        temp[ckeys[rowIndex]] = value;
-                        editedRows.add(temp);
-                      }
-                    },
-                  );
+                ///adds a new edited data to a temporary holder
+                if (result != -1) {
+                  editedRows[result][ckeys[rowIndex]] = value;
+                } else {
+                  var temp = {};
+                  temp['row'] = index;
+                  temp[ckeys[rowIndex]] = value;
+                  editedRows.add(temp);
+                }
+              },
+            );
           }),
         );
       });
@@ -401,7 +415,7 @@ class EditableState extends State<Editable> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child:
-              Column(crossAxisAlignment: widget.createButtonAlign, children: [
+          Column(crossAxisAlignment: widget.createButtonAlign, children: [
             //Table Header
             createButton(),
             Container(
@@ -412,6 +426,7 @@ class EditableState extends State<Editable> {
                           color: widget.borderColor,
                           width: widget.borderWidth))),
               child: Row(
+                  crossAxisAlignment: widget.thVertAlignment,
                   mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
             ),
 
