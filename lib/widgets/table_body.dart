@@ -112,9 +112,9 @@ class _RowBuilderState extends State<RowBuilder> {
                 ),
                 child: Text(
                   widget.cellData.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
+                  textAlign: widget.tdAlignment ?? TextAlign.center,
+                  style: widget.tdStyle ?? TextStyle(
+                    // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
                       fontSize: 16),
                 ),
               ),
