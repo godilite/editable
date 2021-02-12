@@ -39,7 +39,6 @@ class THeader extends StatelessWidget {
     return Flexible(
       fit: FlexFit.loose,
       child: Container(
-        alignment: Alignment(0.5,2.0),
         width: width * _widthRatio,
         child: Padding(
           padding: EdgeInsets.only(
