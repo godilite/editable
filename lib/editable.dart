@@ -72,6 +72,7 @@ class Editable extends StatefulWidget {
         this.saveIconSize = 18,
         this.tdAlignment = TextAlign.start,
         this.tdStyle,
+        this.tdEditableMaxLines = 1,
         this.thAlignment = TextAlign.start,
         this.thStyle,
         this.thVertAlignment = CrossAxisAlignment.center,
@@ -170,6 +171,9 @@ class Editable extends StatefulWidget {
 
   /// Style the table data
   final TextStyle tdStyle;
+
+  /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden)
+  final int tdEditableMaxLines;
 
   /// Table header cell padding left
   final double thPaddingLeft;
@@ -379,6 +383,7 @@ class EditableState extends State<Editable> {
               tdPaddingRight: widget.tdPaddingRight,
               tdAlignment: widget.tdAlignment,
               tdStyle: widget.tdStyle,
+              tdEditableMaxLines: widget.tdEditableMaxLines,
               onSubmitted: widget.onSubmitted,
               widthRatio: cwidths[rowIndex].toDouble(),
               isEditable: ceditable[rowIndex],
