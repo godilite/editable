@@ -73,3 +73,9 @@
 * New feature: Use GlobalKey State to get edited row data
 * New feature: Use GlobalKey State to create new row
 * This enable creating row and saving edited rows anywhere outside the Editable widget
+
+## [1.1.4] - 16/02/2021
+
+* added tdEditableMaxLines parameter to allow editable data to wrap and not be hidden when it overflows (setting to 100 allows editable data to behave same as the NON editable data)
+* Added support for specifying max lines for editable data cells so that they can wrap and have all data visible.
+* added support for completely controlling the style and alignment of the table headers.
