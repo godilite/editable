@@ -41,7 +41,7 @@ dependency:
 ```yaml
 dependencies:
   ...
-  editable: "^1.1.3"
+  editable: "^1.1.4"
 ```
 
 In your library add the following import:
@@ -109,6 +109,7 @@ To create a new table, use the `Editable()` widget class and provide the table d
   - `trHeight`: Table Row Height, cannot be less than 40.0 ;
   - `thWeight`: Table headers fontweight;
   - `thSize`: Table headers fontSize;
+  - `tdEditableMaxLines` : Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden), setting to 100 will allow wrapping and not increase row size;
   - `showSaveIcon`:  Toogles the save button, if [true] displays an icon to save rows, 
         adds an addition column to the right
   - `saveIcon`: Icon for to save row data, example:
@@ -203,10 +204,14 @@ To create a new table, use the `Editable()` widget class and provide the table d
 # Screenshots
 ### Editable Table with Data (zebraStripe)
 ![Editable Table with Data](https://user-images.githubusercontent.com/41484542/96218374-85cb8100-0f7c-11eb-9bd3-f3154073d747.png)
+
 ### Empty SpreadSheet (zebraStripe)
+
 ![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/96218512-caefb300-0f7c-11eb-93e1-77fd66f7cc2b.png)
+
 ### Empty SpreadSheet (No Stripe)
 ![Empty Sheet](https://user-images.githubusercontent.com/41484542/96218567-e490fa80-0f7c-11eb-8df1-03aebd4b4ee4.png)
+
 ### Table with Save Icon
 ![Table with save icons](https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png)
 
@@ -237,6 +242,13 @@ Here is a quick list of things to remember
 # Author
 
 This Editable table package for Flutter is developed by [Godwin Asuquo](https://github.com/godilite)
+
+# Contributors
+[CY Uket](https://github.com/cyuket)
+[AmitB](https://github.com/Amitbhave)
+[Tim Maffet](https://github.com/timmaffett)
+[Thumbert](https://github.com/thumbert)
+❤️Thank you all for your contributions
 
 Also, as always, please give us a star to help!
 
