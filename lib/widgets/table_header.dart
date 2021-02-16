@@ -9,6 +9,8 @@ class THeader extends StatelessWidget {
       @required this.thPaddingBottom,
       @required this.thPaddingRight,
       @required List headers,
+      @required this.thAlignment,
+      @required this.thStyle,
       @required FontWeight thWeight,
       @required double thSize,
       @required double widthRatio,
@@ -25,6 +27,8 @@ class THeader extends StatelessWidget {
   final double thPaddingBottom;
   final double thPaddingRight;
   final List _headers;
+  final TextAlign thAlignment;
+  final TextStyle thStyle;
   final FontWeight _thWeight;
   final double _thSize;
   final int _index;
@@ -46,7 +50,8 @@ class THeader extends StatelessWidget {
             _headers != null || _headers.isNotEmpty
                 ? _headers[_index]['title']
                 : '',
-            style: TextStyle(fontWeight: _thWeight, fontSize: _thSize),
+            style: thStyle ?? TextStyle(fontWeight: _thWeight, fontSize: _thSize),
+            textAlign: thAlignment ?? TextAlign.start,
           ),
         ),
       ),
