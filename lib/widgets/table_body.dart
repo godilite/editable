@@ -17,6 +17,7 @@ class RowBuilder extends StatefulWidget {
     @required this.tdPaddingTop,
     @required this.tdPaddingBottom,
     @required this.tdPaddingRight,
+    @required this.tdEditableMaxLines,
     @required this.onSubmitted,
     @required this.onChanged,
     @required this.widthRatio,
@@ -45,6 +46,7 @@ class RowBuilder extends StatefulWidget {
   final double tdPaddingTop;
   final double tdPaddingBottom;
   final double tdPaddingRight;
+  final int tdEditableMaxLines;
   final Color stripeColor1;
   final Color stripeColor2;
   final bool zebraStripe;
@@ -67,6 +69,9 @@ class _RowBuilderState extends State<RowBuilder> {
         height: widget._trHeight < 40 ? 40 : widget._trHeight,
         width: width * widget.widthRatio,
         decoration: BoxDecoration(
+            color: !widget.zebraStripe ? null : (widget.index % 2 == 1.0
+                ? widget.stripeColor2
+                : widget.stripeColor1),
             border: Border.all(
                 color: widget._borderColor, width: widget._borderWidth)),
         child: widget.isEditable
@@ -77,6 +82,7 @@ class _RowBuilderState extends State<RowBuilder> {
                 onFieldSubmitted: widget.onSubmitted,
                 onChanged: widget.onChanged,
                 textAlignVertical: TextAlignVertical.center,
+                maxLines: widget.tdEditableMaxLines,
                 decoration: InputDecoration(
                   filled: widget.zebraStripe,
                   fillColor: widget.index % 2 == 1.0
@@ -100,15 +106,15 @@ class _RowBuilderState extends State<RowBuilder> {
                   // bottom: widget.tdPaddingBottom,
                 ),
                 decoration: BoxDecoration(
-                  color: widget.index % 2 == 1.0
+                  color: !widget.zebraStripe ? null : (widget.index % 2 == 1.0
                       ? widget.stripeColor2
-                      : widget.stripeColor1,
+                      : widget.stripeColor1),
                 ),
                 child: Text(
                   widget.cellData.toString(),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
+                  textAlign: widget.tdAlignment ?? TextAlign.center,
+                  style: widget.tdStyle ?? TextStyle(
+                    // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
                       fontSize: 16),
                 ),
               ),

@@ -72,6 +72,10 @@ class Editable extends StatefulWidget {
       this.saveIconSize = 18,
       this.tdAlignment = TextAlign.start,
       this.tdStyle,
+      this.tdEditableMaxLines = 1,
+      this.thAlignment = TextAlign.start,
+      this.thStyle,
+      this.thVertAlignment = CrossAxisAlignment.center,
       this.showCreateButton = false,
       this.createButtonAlign = CrossAxisAlignment.start,
       this.createButtonIcon,
@@ -168,6 +172,9 @@ class Editable extends StatefulWidget {
   /// Style the table data
   final TextStyle tdStyle;
 
+  /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden), setting to 100 will allow wrapping and not increase row size
+  final int tdEditableMaxLines;
+
   /// Table header cell padding left
   final double thPaddingLeft;
 
@@ -180,15 +187,24 @@ class Editable extends StatefulWidget {
   /// Table header cell padding bottom
   final double thPaddingBottom;
 
+  /// Aligns the table header
+  final TextAlign thAlignment;
+
+  /// Style the table header - use for more control of header style, using this OVERRIDES the thWeight and thSize parameters and those will be ignored.
+  final TextStyle thStyle;
+
+  /// Table headers fontweight (use thStyle for more control of header style)
+  final FontWeight thWeight;
+
+  /// Table header label vertical alignment
+  final CrossAxisAlignment thVertAlignment;
+
+  /// Table headers fontSize  (use thStyle for more control of header style)
+  final double thSize;
+
   /// Table Row Height
   /// cannot be less than 40.0
   final double trHeight;
-
-  /// Table headers fontweight
-  final FontWeight thWeight;
-
-  /// Table headers fontSize
-  final double thSize;
 
   /// Toogles the save button,
   /// if [true] displays an icon to save rows,
@@ -323,6 +339,8 @@ class EditableState extends State<Editable> {
                 widthRatio: columns[index]['widthFactor'] != null
                     ? columns[index]['widthFactor'].toDouble()
                     : widget.columnRatio,
+                thAlignment: widget.thAlignment,
+                thStyle: widget.thStyle,
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
                 thPaddingBottom: widget.thPaddingBottom,
@@ -365,6 +383,7 @@ class EditableState extends State<Editable> {
                     tdPaddingRight: widget.tdPaddingRight,
                     tdAlignment: widget.tdAlignment,
                     tdStyle: widget.tdStyle,
+                    tdEditableMaxLines: widget.tdEditableMaxLines,
                     onSubmitted: widget.onSubmitted,
                     widthRatio: cwidths[rowIndex].toDouble(),
                     isEditable: ceditable[rowIndex],
@@ -412,6 +431,7 @@ class EditableState extends State<Editable> {
                           color: widget.borderColor,
                           width: widget.borderWidth))),
               child: Row(
+                  crossAxisAlignment: widget.thVertAlignment,
                   mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
             ),
 
