@@ -202,18 +202,15 @@ To create a new table, use the `Editable()` widget class and provide the table d
 
   ```
 # Screenshots
-### Editable Table with Data (zebraStripe)
-![Editable Table with Data](https://user-images.githubusercontent.com/41484542/96218374-85cb8100-0f7c-11eb-9bd3-f3154073d747.png)
 
-### Empty SpreadSheet (zebraStripe)
+Editable Table with Data (zebraStripe)  |Empty SpreadSheet (zebraStripe)    | Empty SpreadSheet (No Stripe)
+:-------------:|:-------------:|:-------------:
+<img src="https://user-images.githubusercontent.com/41484542/96218374-85cb8100-0f7c-11eb-9bd3-f3154073d747.png"/> | <img src="https://user-images.githubusercontent.com/41484542/96218512-caefb300-0f7c-11eb-93e1-77fd66f7cc2b.png"/> | <img src="https://user-images.githubusercontent.com/41484542/96218567-e490fa80-0f7c-11eb-8df1-03aebd4b4ee4.png"/>
 
-![Empty SpreadSheet](https://user-images.githubusercontent.com/41484542/96218512-caefb300-0f7c-11eb-93e1-77fd66f7cc2b.png)
+Table with Save Icon
+:-------------:|
+<img src="https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png"/>
 
-### Empty SpreadSheet (No Stripe)
-![Empty Sheet](https://user-images.githubusercontent.com/41484542/96218567-e490fa80-0f7c-11eb-8df1-03aebd4b4ee4.png)
-
-### Table with Save Icon
-![Table with save icons](https://user-images.githubusercontent.com/41484542/95015531-4da37480-0645-11eb-965a-f3d3507c18da.png)
 
 
 # Tutorials
