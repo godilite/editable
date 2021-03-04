@@ -79,3 +79,8 @@
 * added tdEditableMaxLines parameter to allow editable data to wrap and not be hidden when it overflows (setting to 100 allows editable data to behave same as the NON editable data)
 * Added support for specifying max lines for editable data cells so that they can wrap and have all data visible.
 * added support for completely controlling the style and alignment of the table headers.
+
+## [2.0.0] - 04/03/2021
+
+* Migrates to sound null-safety
+* Remove deprecated example widgets

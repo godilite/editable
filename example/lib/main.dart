@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         leadingWidth: 200,
-        leading: FlatButton.icon(
+        leading: TextButton.icon(
             onPressed: () => _addNewRow(),
             icon: Icon(Icons.add),
             label: Text(
@@ -98,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: FlatButton(
+            child: TextButton(
                 onPressed: () => _printEditedRows(),
                 child: Text('Print Edited Rows',
                     style: TextStyle(fontWeight: FontWeight.bold))),
@@ -119,9 +119,9 @@ class _MyHomePageState extends State<MyHomePage> {
           print(value);
         },
         borderColor: Colors.blueGrey,
-        tdStyle: TextStyle( fontWeight: FontWeight.bold ),
+        tdStyle: TextStyle(fontWeight: FontWeight.bold),
         trHeight: 80,
-        thStyle: TextStyle( fontSize: 15, fontWeight: FontWeight.bold ),
+        thStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         thAlignment: TextAlign.center,
         thVertAlignment: CrossAxisAlignment.end,
         thPaddingBottom: 3,
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
         saveIconColor: Colors.black,
         showCreateButton: true,
         tdAlignment: TextAlign.left,
-        tdEditableMaxLines: 100,  // don't limit and allow data to wrap
+        tdEditableMaxLines: 100, // don't limit and allow data to wrap
         tdPaddingTop: 0,
         tdPaddingBottom: 14,
         tdPaddingLeft: 10,

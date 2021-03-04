@@ -45,7 +45,7 @@ class Editable extends StatefulWidget {
   /// }
   /// ```
   Editable(
-      {Key key,
+      {Key? key,
       this.columns,
       this.rows,
       this.columnRatio = 0.20,
@@ -113,7 +113,7 @@ class Editable extends StatefulWidget {
   ///
   /// [key] an identifier preferably a short string
   /// [editable] a boolean, if the column should be editable or not, [true] by default.
-  final List columns;
+  final List? columns;
 
   /// A data set to create rows
   ///
@@ -130,7 +130,7 @@ class Editable extends StatefulWidget {
   /// ```
   /// each objects DO NOT have to be positioned in same order as its column
 
-  final List rows;
+  final List? rows;
 
   /// Interger value of number of rows to be generated:
   ///
@@ -170,7 +170,7 @@ class Editable extends StatefulWidget {
   final TextAlign tdAlignment;
 
   /// Style the table data
-  final TextStyle tdStyle;
+  final TextStyle? tdStyle;
 
   /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden), setting to 100 will allow wrapping and not increase row size
   final int tdEditableMaxLines;
@@ -191,7 +191,7 @@ class Editable extends StatefulWidget {
   final TextAlign thAlignment;
 
   /// Style the table header - use for more control of header style, using this OVERRIDES the thWeight and thSize parameters and those will be ignored.
-  final TextStyle thStyle;
+  final TextStyle? thStyle;
 
   /// Table headers fontweight (use thStyle for more control of header style)
   final FontWeight thWeight;
@@ -232,10 +232,10 @@ class Editable extends StatefulWidget {
   final CrossAxisAlignment createButtonAlign;
 
   /// Icon displayed in the create new row button
-  final Icon createButtonIcon;
+  final Icon? createButtonIcon;
 
   /// Color for the create new row button
-  final Color createButtonColor;
+  final Color? createButtonColor;
 
   /// border shape of the create new row button
   ///
@@ -244,10 +244,10 @@ class Editable extends StatefulWidget {
   ///   borderRadius: BorderRadius.circular(8)
   /// )
   /// ```
-  final BoxShape createButtonShape;
+  final BoxShape? createButtonShape;
 
   /// Label for the create new row button
-  final Widget createButtonLabel;
+  final Widget? createButtonLabel;
 
   /// The first row alternate color, if stripe is set to true
   final Color stripeColor1;
@@ -259,15 +259,15 @@ class Editable extends StatefulWidget {
   /// if enabled, you can style the colors [stripeColor1] and [stripeColor2]
   final bool zebraStripe;
 
-  final InputBorder focusedBorder;
+  final InputBorder? focusedBorder;
 
   ///[onSubmitted] callback is triggered when the enter button is pressed on a table data cell
   /// it returns a value of the cell data
-  final ValueChanged<String> onSubmitted;
+  final ValueChanged<String>? onSubmitted;
 
   /// [onRowSaved] callback is triggered when a [saveButton] is pressed.
   /// returns only values if row is edited, otherwise returns a string ['no edit']
-  final ValueChanged<dynamic> onRowSaved;
+  final ValueChanged<dynamic>? onRowSaved;
 
   @override
   EditableState createState() => EditableState(
@@ -278,9 +278,9 @@ class Editable extends StatefulWidget {
 }
 
 class EditableState extends State<Editable> {
-  List rows, columns;
-  int columnCount;
-  int rowCount;
+  List? rows, columns;
+  int? columnCount;
+  int? rowCount;
 
   ///Get all edited rows
   List get editedRows => _editedRows;
@@ -295,11 +295,11 @@ class EditableState extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-    rowCount = rows == null || rows.isEmpty ? widget.rowCount : rows.length;
+    rowCount = rows == null || rows!.isEmpty ? widget.rowCount : rows!.length;
     columnCount =
-        columns == null || columns.isEmpty ? columnCount : columns.length;
+        columns == null || columns!.isEmpty ? columnCount : columns!.length;
     columns = columns ?? columnBlueprint(columnCount, columns);
-    rows = rows ?? rowBlueprint(rowCount, columns, rows);
+    rows = rows ?? rowBlueprint(rowCount!, columns, rows);
 
     /// Builds saveIcon widget
     Widget _saveIcon(index) {
@@ -319,9 +319,9 @@ class EditableState extends State<Editable> {
               int rowIndex = editedRows.indexWhere(
                   (element) => element['row'] == index ? true : false);
               if (rowIndex != -1) {
-                widget.onRowSaved(editedRows[rowIndex]);
+                widget.onRowSaved!(editedRows[rowIndex]);
               } else {
-                widget.onRowSaved('no edit');
+                widget.onRowSaved!('no edit');
               }
             },
           ),
@@ -331,13 +331,13 @@ class EditableState extends State<Editable> {
 
     /// Generates table columns
     List<Widget> _tableHeaders() {
-      return List<Widget>.generate(columnCount + 1, (index) {
-        return columnCount + 1 == (index + 1)
+      return List<Widget>.generate(columnCount! + 1, (index) {
+        return columnCount! + 1 == (index + 1)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: columns[index]['widthFactor'] != null
-                    ? columns[index]['widthFactor'].toDouble()
+                widthRatio: columns![index]['widthFactor'] != null
+                    ? columns![index]['widthFactor'].toDouble()
                     : widget.columnRatio,
                 thAlignment: widget.thAlignment,
                 thStyle: widget.thStyle,
@@ -354,21 +354,21 @@ class EditableState extends State<Editable> {
 
     /// Generates table rows
     List<Widget> _tableRows() {
-      return List<Widget>.generate(rowCount, (index) {
+      return List<Widget>.generate(rowCount!, (index) {
         return Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount + 1, (rowIndex) {
+          children: List.generate(columnCount! + 1, (rowIndex) {
             var ckeys = [];
             var cwidths = [];
             var ceditable = <bool>[];
-            columns.forEach((e) {
+            columns!.forEach((e) {
               ckeys.add(e['key']);
               cwidths.add(e['widthFactor'] ?? widget.columnRatio);
               ceditable.add(e['editable'] ?? true);
             });
-            var list = rows[index];
-            return columnCount + 1 == (rowIndex + 1)
+            var list = rows![index];
+            return columnCount! + 1 == (rowIndex + 1)
                 ? _saveIcon(index)
                 : RowBuilder(
                     index: index,
@@ -432,7 +432,8 @@ class EditableState extends State<Editable> {
                           width: widget.borderWidth))),
               child: Row(
                   crossAxisAlignment: widget.thVertAlignment,
-                  mainAxisSize: MainAxisSize.min, children: _tableHeaders()),
+                  mainAxisSize: MainAxisSize.min,
+                  children: _tableHeaders()),
             ),
 
             Expanded(
@@ -457,7 +458,7 @@ class EditableState extends State<Editable> {
         child: InkWell(
           onTap: () {
             rows = addOneRow(columns, rows);
-            rowCount++;
+            rowCount = rowCount! + 1;
             setState(() {});
           },
           child: Container(
