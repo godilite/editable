@@ -4,29 +4,29 @@ class RowBuilder extends StatefulWidget {
   ///Builds row elements for the table
   /// its properties are not nullable
   const RowBuilder({
-    Key key,
-    @required this.tdAlignment,
-    @required this.tdStyle,
-    @required double trHeight,
-    @required Color borderColor,
-    @required double borderWidth,
-    @required this.cellData,
-    @required this.index,
-    @required this.col,
-    @required this.tdPaddingLeft,
-    @required this.tdPaddingTop,
-    @required this.tdPaddingBottom,
-    @required this.tdPaddingRight,
-    @required this.tdEditableMaxLines,
-    @required this.onSubmitted,
-    @required this.onChanged,
-    @required this.widthRatio,
-    @required this.isEditable,
-    @required this.stripeColor1,
-    @required this.stripeColor2,
-    @required this.zebraStripe,
-    @required this.focusedBorder,
-  })  : _trHeight = trHeight,
+    Key? key,
+    required this.tdAlignment,
+    required this.tdStyle,
+    required double trHeight,
+    required Color borderColor,
+    required double borderWidth,
+    required this.cellData,
+    required this.index,
+    required this.col,
+    required this.tdPaddingLeft,
+    required this.tdPaddingTop,
+    required this.tdPaddingBottom,
+    required this.tdPaddingRight,
+    required this.tdEditableMaxLines,
+    required this.onSubmitted,
+    required this.onChanged,
+    required this.widthRatio,
+    required this.isEditable,
+    required this.stripeColor1,
+    required this.stripeColor2,
+    required this.zebraStripe,
+    required this.focusedBorder,
+  })   : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
         super(key: key);
@@ -36,10 +36,10 @@ class RowBuilder extends StatefulWidget {
   final Color _borderColor;
   final double _borderWidth;
   final cellData;
-  final double widthRatio;
+  final double? widthRatio;
   final bool isEditable;
   final TextAlign tdAlignment;
-  final TextStyle tdStyle;
+  final TextStyle? tdStyle;
   final int index;
   final col;
   final double tdPaddingLeft;
@@ -50,8 +50,8 @@ class RowBuilder extends StatefulWidget {
   final Color stripeColor1;
   final Color stripeColor2;
   final bool zebraStripe;
-  final InputBorder focusedBorder;
-  final ValueChanged<String> onSubmitted;
+  final InputBorder? focusedBorder;
+  final ValueChanged<String>? onSubmitted;
   final ValueChanged<String> onChanged;
 
   @override
@@ -67,11 +67,13 @@ class _RowBuilderState extends State<RowBuilder> {
       flex: 6,
       child: Container(
         height: widget._trHeight < 40 ? 40 : widget._trHeight,
-        width: width * widget.widthRatio,
+        width: width * widget.widthRatio!,
         decoration: BoxDecoration(
-            color: !widget.zebraStripe ? null : (widget.index % 2 == 1.0
-                ? widget.stripeColor2
-                : widget.stripeColor1),
+            color: !widget.zebraStripe
+                ? null
+                : (widget.index % 2 == 1.0
+                    ? widget.stripeColor2
+                    : widget.stripeColor1),
             border: Border.all(
                 color: widget._borderColor, width: widget._borderWidth)),
         child: widget.isEditable
@@ -106,16 +108,19 @@ class _RowBuilderState extends State<RowBuilder> {
                   // bottom: widget.tdPaddingBottom,
                 ),
                 decoration: BoxDecoration(
-                  color: !widget.zebraStripe ? null : (widget.index % 2 == 1.0
-                      ? widget.stripeColor2
-                      : widget.stripeColor1),
+                  color: !widget.zebraStripe
+                      ? null
+                      : (widget.index % 2 == 1.0
+                          ? widget.stripeColor2
+                          : widget.stripeColor1),
                 ),
                 child: Text(
                   widget.cellData.toString(),
-                  textAlign: widget.tdAlignment ?? TextAlign.center,
-                  style: widget.tdStyle ?? TextStyle(
-                    // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
-                      fontSize: 16),
+                  textAlign: widget.tdAlignment,
+                  style: widget.tdStyle ??
+                      TextStyle(
+                          // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
+                          fontSize: 16),
                 ),
               ),
       ),
