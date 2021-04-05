@@ -85,7 +85,8 @@ class Editable extends StatefulWidget {
       this.stripeColor1 = Colors.white,
       this.stripeColor2 = Colors.black12,
       this.zebraStripe = false,
-      this.focusedBorder})
+      this.focusedBorder,
+      this.cellEditorWidget})
       : super(key: key);
 
   /// A data set to create headers
@@ -269,6 +270,50 @@ class Editable extends StatefulWidget {
   /// returns only values if row is edited, otherwise returns a string ['no edit']
   final ValueChanged<dynamic>? onRowSaved;
 
+  ///  Function called to render the editable cell's. If not provided then
+  ///  editable will use the defulat one.
+  ///  Importan parameters are:
+  ///  Example (this is the default cell editor widget):
+  ///  Widget getCellEditorWidget(
+  ///     cellData,
+  ///     int rowNumber,
+  ///     columnIndex
+  ///     TextAlign tdAlignment,
+  ///     TextStyle? tdStyle,
+  ///     double tdPaddingLeft,
+  ///     double tdPaddingTop,
+  ///     double tdPaddingBottom,
+  ///     double tdPaddingRight,
+  ///     int tdEditableMaxLines,
+  ///     Color stripeColor1,
+  ///     Color stripeColor2,
+  ///     bool zebraStripe,
+  ///     InputBorder? focusedBorder,
+  ///     ValueChanged<String>? onSubmitted,
+  ///     ValueChanged<String> onChanged) {
+  ///   return TextFormField(
+  ///     textAlign: tdAlignment,
+  ///     style: tdStyle,
+  ///     initialValue: cellData.toString(),
+  ///     onFieldSubmitted: onSubmitted,
+  ///     onChanged: onChanged,
+  ///     textAlignVertical: TextAlignVertical.center,
+  ///     maxLines: tdEditableMaxLines,
+  ///     decoration: InputDecoration(
+  ///       filled: zebraStripe,
+  ///       fillColor: rowNumber % 2 == 1.0 ? stripeColor2 : stripeColor1,
+  ///       contentPadding: EdgeInsets.only(
+  ///           left: tdPaddingLeft,
+  ///           right: tdPaddingRight,
+  ///           top: [tdPaddingTop],
+  ///           bottom: tdPaddingBottom),
+  ///       border: InputBorder.none,
+  ///       focusedBorder: focusedBorder,
+  ///     ),
+  ///   );
+  /// }
+  final Function? cellEditorWidget;
+
   @override
   EditableState createState() => EditableState(
       rows: this.rows,
@@ -391,6 +436,7 @@ class EditableState extends State<Editable> {
                     focusedBorder: widget.focusedBorder,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
+                    cellEditorWidget: getCellEditorWidgetCreator,
                     onChanged: (value) {
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {
@@ -474,6 +520,99 @@ class EditableState extends State<Editable> {
             child: widget.createButtonIcon ?? Icon(Icons.add),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget getCellEditorWidgetCreator(
+      cellData,
+      int rowNumber,
+      columnIndex,
+      TextAlign tdAlignment,
+      TextStyle? tdStyle,
+      double tdPaddingLeft,
+      double tdPaddingTop,
+      double tdPaddingBottom,
+      double tdPaddingRight,
+      int tdEditableMaxLines,
+      Color stripeColor1,
+      Color stripeColor2,
+      bool zebraStripe,
+      InputBorder? focusedBorder,
+      ValueChanged<String>? onSubmitted,
+      ValueChanged<String> onChanged) {
+    return widget.cellEditorWidget == null
+        ? getCellEditorWidget(
+            cellData,
+            rowNumber,
+            columnIndex,
+            tdAlignment,
+            tdStyle,
+            tdPaddingLeft,
+            tdPaddingTop,
+            tdPaddingBottom,
+            tdPaddingRight,
+            tdEditableMaxLines,
+            stripeColor1,
+            stripeColor2,
+            zebraStripe,
+            focusedBorder,
+            onSubmitted,
+            onChanged)
+        : widget.cellEditorWidget!(
+            cellData,
+            rowNumber,
+            columnIndex,
+            tdAlignment,
+            tdStyle,
+            tdPaddingLeft,
+            tdPaddingTop,
+            tdPaddingBottom,
+            tdPaddingRight,
+            tdEditableMaxLines,
+            stripeColor1,
+            stripeColor2,
+            zebraStripe,
+            focusedBorder,
+            onSubmitted,
+            onChanged);
+  }
+
+  Widget getCellEditorWidget(
+      cellData,
+      int rowNumber,
+      columnIndex,
+      TextAlign tdAlignment,
+      TextStyle? tdStyle,
+      double tdPaddingLeft,
+      double tdPaddingTop,
+      double tdPaddingBottom,
+      double tdPaddingRight,
+      int tdEditableMaxLines,
+      Color stripeColor1,
+      Color stripeColor2,
+      bool zebraStripe,
+      InputBorder? focusedBorder,
+      ValueChanged<String>? onSubmitted,
+      ValueChanged<String> onChanged) {
+    return TextFormField(
+      textAlign: tdAlignment,
+      style: tdStyle,
+      initialValue: cellData.toString(),
+      onFieldSubmitted: onSubmitted,
+      onChanged: onChanged,
+      textAlignVertical: TextAlignVertical.center,
+      maxLines: tdEditableMaxLines,
+      decoration: InputDecoration(
+        filled: zebraStripe,
+        fillColor: rowNumber % 2 == 1.0 ? stripeColor2 : stripeColor1,
+        contentPadding: EdgeInsets.only(
+            left: tdPaddingLeft,
+            right: tdPaddingRight,
+            top: tdPaddingTop,
+            bottom: tdPaddingBottom),
+        border: InputBorder.none,
+        focusedBorder: focusedBorder,
       ),
     );
   }

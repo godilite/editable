@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -72,13 +72,13 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Access the current state of Editable
   void _addNewRow() {
     setState(() {
-      _editableKey.currentState.createRow();
+      _editableKey.currentState!.createRow();
     });
   }
 
   ///Print only edited rows.
   void _printEditedRows() {
-    List editedRows = _editableKey.currentState.editedRows;
+    List editedRows = _editableKey.currentState!.editedRows;
     print(editedRows);
   }
 
@@ -110,8 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
         columns: cols,
         rows: rows,
         zebraStripe: true,
-        stripeColor1: Colors.blue[50],
-        stripeColor2: Colors.grey[200],
+        stripeColor1: Colors.blue[50]!,
+        stripeColor2: Colors.grey[200]!,
         onRowSaved: (value) {
           print(value);
         },
@@ -137,6 +137,46 @@ class _MyHomePageState extends State<MyHomePage> {
         focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.blue),
             borderRadius: BorderRadius.all(Radius.circular(0))),
+        //cellEditorWidget: getCellEditorWithInvertedStripesWidget,
+      ),
+    );
+  }
+
+  Widget getCellEditorWithInvertedStripesWidget(
+      cellData,
+      int rowNumber,
+      columnIndex,
+      TextAlign tdAlignment,
+      TextStyle? tdStyle,
+      double tdPaddingLeft,
+      double tdPaddingTop,
+      double tdPaddingBottom,
+      double tdPaddingRight,
+      int tdEditableMaxLines,
+      Color stripeColor1,
+      Color stripeColor2,
+      bool zebraStripe,
+      InputBorder? focusedBorder,
+      ValueChanged<String>? onSubmitted,
+      ValueChanged<String> onChanged) {
+    return TextFormField(
+      textAlign: tdAlignment,
+      style: tdStyle,
+      initialValue: cellData.toString(),
+      onFieldSubmitted: onSubmitted,
+      onChanged: onChanged,
+      textAlignVertical: TextAlignVertical.center,
+      maxLines: tdEditableMaxLines,
+      decoration: InputDecoration(
+        filled: zebraStripe,
+        fillColor: rowNumber % 2 == 1.0 ? stripeColor1 : stripeColor2,
+        contentPadding: EdgeInsets.only(
+            left: tdPaddingLeft,
+            right: tdPaddingRight,
+            top: tdPaddingTop,
+            bottom: tdPaddingBottom),
+        border: InputBorder.none,
+        focusedBorder: focusedBorder,
       ),
     );
   }

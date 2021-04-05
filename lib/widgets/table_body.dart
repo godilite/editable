@@ -26,6 +26,7 @@ class RowBuilder extends StatefulWidget {
     required this.stripeColor2,
     required this.zebraStripe,
     required this.focusedBorder,
+    required this.cellEditorWidget,
   })   : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -53,6 +54,7 @@ class RowBuilder extends StatefulWidget {
   final InputBorder? focusedBorder;
   final ValueChanged<String>? onSubmitted;
   final ValueChanged<String> onChanged;
+  final Function cellEditorWidget;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -77,28 +79,23 @@ class _RowBuilderState extends State<RowBuilder> {
             border: Border.all(
                 color: widget._borderColor, width: widget._borderWidth)),
         child: widget.isEditable
-            ? TextFormField(
-                textAlign: widget.tdAlignment,
-                style: widget.tdStyle,
-                initialValue: widget.cellData.toString(),
-                onFieldSubmitted: widget.onSubmitted,
-                onChanged: widget.onChanged,
-                textAlignVertical: TextAlignVertical.center,
-                maxLines: widget.tdEditableMaxLines,
-                decoration: InputDecoration(
-                  filled: widget.zebraStripe,
-                  fillColor: widget.index % 2 == 1.0
-                      ? widget.stripeColor2
-                      : widget.stripeColor1,
-                  contentPadding: EdgeInsets.only(
-                      left: widget.tdPaddingLeft,
-                      right: widget.tdPaddingRight,
-                      top: widget.tdPaddingTop,
-                      bottom: widget.tdPaddingBottom),
-                  border: InputBorder.none,
-                  focusedBorder: widget.focusedBorder,
-                ),
-              )
+            ? widget.cellEditorWidget(
+                widget.cellData,
+                widget.index,
+                widget.col,
+                widget.tdAlignment,
+                widget.tdStyle,
+                widget.tdPaddingLeft,
+                widget.tdPaddingTop,
+                widget.tdPaddingBottom,
+                widget.tdPaddingRight,
+                widget.tdEditableMaxLines,
+                widget.stripeColor1,
+                widget.stripeColor2,
+                widget.zebraStripe,
+                widget.focusedBorder,
+                widget.onSubmitted,
+                widget.onChanged)
             : Container(
                 alignment: Alignment.centerLeft,
                 padding: EdgeInsets.only(
