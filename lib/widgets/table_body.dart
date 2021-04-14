@@ -82,6 +82,7 @@ class _RowBuilderState extends State<RowBuilder> {
                 style: widget.tdStyle,
                 initialValue: widget.cellData.toString(),
                 onFieldSubmitted: widget.onSubmitted,
+                textInputAction: TextInputAction.done,  
                 onChanged: widget.onChanged,
                 textAlignVertical: TextAlignVertical.center,
                 maxLines: widget.tdEditableMaxLines,
