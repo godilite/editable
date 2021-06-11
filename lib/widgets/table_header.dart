@@ -49,7 +49,7 @@ class THeader extends StatelessWidget {
           child: Text(
             _headers != null || _headers!.isNotEmpty
                 ? _headers![_index]['title']
-                : '',
+                : Container(),
             style:
                 thStyle ?? TextStyle(fontWeight: _thWeight, fontSize: _thSize),
             textAlign: thAlignment ?? TextAlign.start,
