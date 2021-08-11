@@ -70,6 +70,10 @@ class Editable extends StatefulWidget {
       this.saveIcon = Icons.save,
       this.saveIconColor = Colors.black12,
       this.saveIconSize = 18,
+      this.showRemoveIcon = false,
+      this.removeIcon = Icons.delete,
+      this.removeIconColor = Colors.black12,
+      this.removeIconSize = 18,
       this.tdAlignment = TextAlign.start,
       this.tdStyle,
       this.tdEditableMaxLines = 1,
@@ -211,6 +215,11 @@ class Editable extends StatefulWidget {
   /// adds an addition column to the right
   final bool showSaveIcon;
 
+  /// Toogles the remove button,
+  /// if [true] displays an icon to remove rows,
+  /// adds an addition column to the right
+  final bool showRemoveIcon;
+
   /// Icon for to save row data
   /// example:
   ///
@@ -219,11 +228,25 @@ class Editable extends StatefulWidget {
   /// ````
   final IconData saveIcon;
 
+  // Icon for to delete row data
+  /// example:
+  ///
+  /// ```dart
+  /// removeIcon : Icons.delete
+  /// ````
+  final IconData removeIcon;
+
   /// Color for the save Icon
   final Color saveIconColor;
 
+  /// Color for the remove Icon
+  final Color removeIconColor;
+
   /// Size for the saveIcon
   final double saveIconSize;
+
+  /// Size for the removeIcon
+  final double removeIconSize;
 
   /// displays a button that adds a new row onPressed
   final bool showCreateButton;
@@ -301,31 +324,57 @@ class EditableState extends State<Editable> {
     columns = columns ?? columnBlueprint(columnCount, columns);
     rows = rows ?? rowBlueprint(rowCount!, columns, rows);
 
-    /// Builds saveIcon widget
-    Widget _saveIcon(index) {
-      return Flexible(
-        fit: FlexFit.loose,
-        child: Visibility(
-          visible: widget.showSaveIcon,
-          child: IconButton(
-            padding: EdgeInsets.only(right: widget.tdPaddingRight),
-            hoverColor: Colors.transparent,
-            icon: Icon(
-              widget.saveIcon,
-              color: widget.saveIconColor,
-              size: widget.saveIconSize,
+    /// Builds save snd remove Icons widget
+
+
+    Widget _removeSaveIcons(index) {
+      return Row(
+        children: <Widget>[
+          Container(
+            child: Visibility(
+              visible: widget.showRemoveIcon,
+              child: IconButton(
+                // padding: EdgeInsets.only(right: widget.tdPaddingRight),
+                hoverColor: Colors.transparent,
+                icon: Icon(
+                  widget.removeIcon,
+                  color: widget.removeIconColor,
+                  size: widget.removeIconSize,
+                ),
+                onPressed: () {
+                  rowCount = rowCount! - 1;
+
+                  setState(() {
+                    rows = removeOneRow(columns, rows, rows![index]);
+                  });
+                },
+              ),
             ),
-            onPressed: () {
-              int rowIndex = editedRows.indexWhere(
-                  (element) => element['row'] == index ? true : false);
-              if (rowIndex != -1) {
-                widget.onRowSaved!(editedRows[rowIndex]);
-              } else {
-                widget.onRowSaved!('no edit');
-              }
-            },
           ),
-        ),
+          Container(
+            child: Visibility(
+              visible: widget.showSaveIcon,
+              child: IconButton(
+                // padding: EdgeInsets.only(right: widget.tdPaddingRight),
+                hoverColor: Colors.transparent,
+                icon: Icon(
+                  widget.saveIcon,
+                  color: widget.saveIconColor,
+                  size: widget.saveIconSize,
+                ),
+                onPressed: () {
+                  int rowIndex = editedRows.indexWhere(
+                      (element) => element['row'] == index ? true : false);
+                  if (rowIndex != -1) {
+                    widget.onRowSaved!(editedRows[rowIndex]);
+                  } else {
+                    widget.onRowSaved!('no edit');
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       );
     }
 
@@ -369,7 +418,7 @@ class EditableState extends State<Editable> {
             });
             var list = rows![index];
             return columnCount! + 1 == (rowIndex + 1)
-                ? _saveIcon(index)
+                ? _removeSaveIcons(index)
                 : RowBuilder(
                     index: index,
                     col: ckeys[rowIndex],
