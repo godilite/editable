@@ -33,6 +33,11 @@ addOneRow(columns, rows) {
   return rows;
 }
 
+removeOneRow(columns, rows, rowToDelete) {
+  rows.remove(rowToDelete);
+  return rows;
+}
+
 ///Create an empty column for saveIcon
 Widget iconColumn(showSaveIcon, thPaddingTop, thPaddingBottom) {
   return Visibility(
