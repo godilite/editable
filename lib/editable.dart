@@ -44,53 +44,54 @@ class Editable extends StatefulWidget {
   ///   );
   /// }
   /// ```
-  Editable(
-      {Key? key,
-      this.columns,
-      this.rows,
-      this.columnRatio = 0.20,
-      this.onSubmitted,
-      this.onRowSaved,
-      this.columnCount = 0,
-      this.rowCount = 0,
-      this.borderColor = Colors.grey,
-      this.tdPaddingLeft = 8.0,
-      this.tdPaddingTop = 8.0,
-      this.tdPaddingRight = 8.0,
-      this.tdPaddingBottom = 12.0,
-      this.thPaddingLeft = 8.0,
-      this.thPaddingTop = 0.0,
-      this.thPaddingRight = 8.0,
-      this.thPaddingBottom = 0.0,
-      this.trHeight = 50.0,
-      this.borderWidth = 0.5,
-      this.thWeight = FontWeight.w600,
-      this.thSize = 18,
-      this.showSaveIcon = false,
-      this.saveIcon = Icons.save,
-      this.saveIconColor = Colors.black12,
-      this.saveIconSize = 18,
-      this.showRemoveIcon = false,
-      this.removeIcon = Icons.delete,
-      this.removeIconColor = Colors.black12,
-      this.removeIconSize = 18,
-      this.tdAlignment = TextAlign.start,
-      this.tdStyle,
-      this.tdEditableMaxLines = 1,
-      this.thAlignment = TextAlign.start,
-      this.thStyle,
-      this.thVertAlignment = CrossAxisAlignment.center,
-      this.showCreateButton = false,
-      this.createButtonAlign = CrossAxisAlignment.start,
-      this.createButtonIcon,
-      this.createButtonColor,
-      this.createButtonShape,
-      this.createButtonLabel,
-      this.stripeColor1 = Colors.white,
-      this.stripeColor2 = Colors.black12,
-      this.zebraStripe = false,
-      this.focusedBorder})
-      : super(key: key);
+  Editable({
+    Key? key,
+    this.columns,
+    this.rows,
+    this.columnRatio = 0.20,
+    this.onSubmitted,
+    this.onRowSaved,
+    this.columnCount = 0,
+    this.rowCount = 0,
+    this.borderColor = Colors.grey,
+    this.tdPaddingLeft = 8.0,
+    this.tdPaddingTop = 8.0,
+    this.tdPaddingRight = 8.0,
+    this.tdPaddingBottom = 12.0,
+    this.thPaddingLeft = 8.0,
+    this.thPaddingTop = 0.0,
+    this.thPaddingRight = 8.0,
+    this.thPaddingBottom = 0.0,
+    this.trHeight = 50.0,
+    this.borderWidth = 0.5,
+    this.thWeight = FontWeight.w600,
+    this.thSize = 18,
+    this.showSaveIcon = false,
+    this.saveIcon = Icons.save,
+    this.saveIconColor = Colors.black12,
+    this.saveIconSize = 18,
+    this.showRemoveIcon = false,
+    this.removeIcon = Icons.delete,
+    this.removeIconColor = Colors.black12,
+    this.removeIconSize = 18,
+    this.tdAlignment = TextAlign.start,
+    this.tdStyle,
+    this.tdEditableMaxLines = 1,
+    this.thAlignment = TextAlign.start,
+    this.thStyle,
+    this.thVertAlignment = CrossAxisAlignment.center,
+    this.showCreateButton = false,
+    this.createButtonAlign = CrossAxisAlignment.start,
+    this.createButtonIcon,
+    this.createButtonColor,
+    this.createButtonShape,
+    this.createButtonLabel,
+    this.stripeColor1 = Colors.white,
+    this.stripeColor2 = Colors.black12,
+    this.zebraStripe = false,
+    this.focusedBorder,
+    this.onCellValueChanged,
+  }) : super(key: key);
 
   /// A data set to create headers
   ///
@@ -292,6 +293,10 @@ class Editable extends StatefulWidget {
   /// returns only values if row is edited, otherwise returns a string ['no edit']
   final ValueChanged<dynamic>? onRowSaved;
 
+  ///[onCellValueChanged] callback is triggered when cell value changes and
+  ///returns values for changed cell that are still not saved;
+  final ValueChanged<dynamic>? onCellValueChanged;
+
   @override
   EditableState createState() => EditableState(
       rows: this.rows,
@@ -325,7 +330,6 @@ class EditableState extends State<Editable> {
     rows = rows ?? rowBlueprint(rowCount!, columns, rows);
 
     /// Builds save snd remove Icons widget
-
 
     Widget _removeSaveIcons(index) {
       return Row(
@@ -441,6 +445,8 @@ class EditableState extends State<Editable> {
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
                     onChanged: (value) {
+                      widget.onCellValueChanged?.call(value);
+
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {
                         return element['row'] != index ? false : true;
