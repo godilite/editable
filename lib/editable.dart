@@ -293,9 +293,9 @@ class Editable extends StatefulWidget {
   /// returns only values if row is edited, otherwise returns a string ['no edit']
   final ValueChanged<dynamic>? onRowSaved;
 
-  ///[onCellValueChanged] callback is triggered when cell value changes and
-  ///returns values for changed cell that are still not saved;
-  final ValueChanged<dynamic>? onCellValueChanged;
+  /// [onCellValueChanged] callback is triggered when cell value changes and
+  /// returns values for changed cell that are still not saved;
+  final ValueChanged<List<Map<String, dynamic>>>? onCellValueChanged;
 
   @override
   EditableState createState() => EditableState(
@@ -311,14 +311,14 @@ class EditableState extends State<Editable> {
   int? rowCount;
 
   ///Get all edited rows
-  List get editedRows => _editedRows;
+  List<Map<String, dynamic>> get editedRows => _editedRows;
 
   ///Create a row after the last row
   createRow() => addOneRow(columns, rows);
   EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
 
   /// Temporarily holds all edited rows
-  List _editedRows = [];
+  List<Map<String, dynamic>> _editedRows = [];
 
   @override
   Widget build(BuildContext context) {
@@ -445,8 +445,6 @@ class EditableState extends State<Editable> {
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
                     onChanged: (value) {
-                      widget.onCellValueChanged?.call(value);
-
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {
                         return element['row'] != index ? false : true;
@@ -456,11 +454,13 @@ class EditableState extends State<Editable> {
                       if (result != -1) {
                         editedRows[result][ckeys[rowIndex]] = value;
                       } else {
-                        var temp = {};
+                        var temp = <String, dynamic>{};
                         temp['row'] = index;
                         temp[ckeys[rowIndex]] = value;
                         editedRows.add(temp);
                       }
+
+                      widget.onCellValueChanged?.call(editedRows);
                     },
                   );
           }),
