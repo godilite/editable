@@ -15,6 +15,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  # Metric for code quality
+  dart_code_metrics: ^4.10.1
+
+    # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices.
+  flutter_lints: ^1.0.0
+
 flutter:
 
   

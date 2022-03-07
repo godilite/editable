@@ -1,5 +1,5 @@
 class MathFunctions {
-  int addtion(List<int> items) {
+  int addition(List<int> items) {
     int sum = items.fold(0, (p, c) => p + c);
     return sum;
   }
@@ -13,4 +13,4 @@ class MathFunctions {
 List<int> test = [1, 2, 3];
 
 MathFunctions math = MathFunctions();
-final sum = math.addtion(test);
+final sum = math.addition(test);

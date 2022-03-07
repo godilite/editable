@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Generates empty columns using the specified columnCount,
 /// if no column count is provided, it uses the [columns.length] value
-columnBlueprint(columnCount, columns) {
+List<Map<String, dynamic>> columnBlueprint(
+    int columnCount, List<Map<String, dynamic>> columns) {
   var data = List.generate(
       columnCount, (index) => {'title': '', 'index': index, 'key': index});
   columns = [...data];
@@ -10,7 +11,8 @@ columnBlueprint(columnCount, columns) {
 }
 
 /// Generates empty rows from rowCount values provided
-rowBlueprint(int rowCount, columns, rows) {
+List<Map<String, dynamic>> rowBlueprint(int rowCount,
+    List<Map<String, dynamic>> columns, List<Map<String, dynamic>> rows) {
   List sampleRow = [];
   for (var i = 0; i < rowCount; i++) {
     var item = {};
@@ -24,8 +26,9 @@ rowBlueprint(int rowCount, columns, rows) {
 }
 
 /// adds a row to existing row lists
-addOneRow(columns, rows) {
-  var item = {};
+List<Map<String, dynamic>> addOneRow(
+    List<Map<String, dynamic>> columns, List<Map<String, dynamic>> rows) {
+  var item = <String, dynamic>{};
   columns.forEach((element) {
     item[element['key']] = '';
   });
@@ -33,7 +36,8 @@ addOneRow(columns, rows) {
   return rows;
 }
 
-removeOneRow(columns, rows, rowToDelete) {
+List<Map<String, dynamic>> removeOneRow(List<Map<String, dynamic>> columns,
+    List<Map<String, dynamic>> rows, Map<String, dynamic> rowToDelete) {
   rows.remove(rowToDelete);
   return rows;
 }
