@@ -91,6 +91,7 @@ class Editable extends StatefulWidget {
     this.zebraStripe = false,
     this.focusedBorder,
     this.onCellValueChanged,
+    this.scrollbarAlwaysVisible = false,
   }) : super(key: key);
 
   /// A data set to create headers
@@ -297,6 +298,9 @@ class Editable extends StatefulWidget {
   /// returns values for changed cell that are still not saved;
   final ValueChanged<List<Map<String, dynamic>>>? onCellValueChanged;
 
+  /// Whether the horizontal scrollbar is always visible.
+  final bool scrollbarAlwaysVisible;
+
   @override
   EditableState createState() => EditableState(
       rows: this.rows,
@@ -323,6 +327,9 @@ class EditableState extends State<Editable> {
 
   /// Temporarily holds all edited rows
   List<Map<String, dynamic>> _editedRows = [];
+
+  /// Controller for the scrollbar
+  ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -475,33 +482,38 @@ class EditableState extends State<Editable> {
       color: Colors.transparent,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child:
-              Column(crossAxisAlignment: widget.createButtonAlign, children: [
-            //Table Header
-            createButton(),
-            Container(
-              padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
-              decoration: BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(
-                          color: widget.borderColor,
-                          width: widget.borderWidth))),
-              child: Row(
-                  crossAxisAlignment: widget.thVertAlignment,
-                  mainAxisSize: MainAxisSize.min,
-                  children: _tableHeaders()),
-            ),
-
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: _tableRows(),
-                ),
+        child: Scrollbar(
+          isAlwaysShown: widget.scrollbarAlwaysVisible,
+          controller: _scrollController,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: _scrollController,
+            child:
+                Column(crossAxisAlignment: widget.createButtonAlign, children: [
+              //Table Header
+              createButton(),
+              Container(
+                padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            color: widget.borderColor,
+                            width: widget.borderWidth))),
+                child: Row(
+                    crossAxisAlignment: widget.thVertAlignment,
+                    mainAxisSize: MainAxisSize.min,
+                    children: _tableHeaders()),
               ),
-            )
-          ]),
+
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: _tableRows(),
+                  ),
+                ),
+              )
+            ]),
+          ),
         ),
       ),
     );
@@ -534,5 +546,11 @@ class EditableState extends State<Editable> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
