@@ -46,8 +46,8 @@ class Editable extends StatefulWidget {
   /// ```
   Editable({
     Key? key,
-    this.columns,
-    this.rows,
+    required this.columns,
+    required this.rows,
     this.columnRatio = 0.20,
     this.onSubmitted,
     this.onRowSaved,
@@ -118,7 +118,7 @@ class Editable extends StatefulWidget {
   ///
   /// [key] an identifier preferably a short string
   /// [editable] a boolean, if the column should be editable or not, [true] by default.
-  final List? columns;
+  final List<Map<String, dynamic>> columns;
 
   /// A data set to create rows
   ///
@@ -135,7 +135,7 @@ class Editable extends StatefulWidget {
   /// ```
   /// each objects DO NOT have to be positioned in same order as its column
 
-  final List? rows;
+  final List<Map<String, dynamic>> rows;
 
   /// Interger value of number of rows to be generated:
   ///
@@ -306,7 +306,7 @@ class Editable extends StatefulWidget {
 }
 
 class EditableState extends State<Editable> {
-  List? rows, columns;
+  List<Map<String, dynamic>> rows, columns;
   int? columnCount;
   int? rowCount;
 
@@ -315,7 +315,11 @@ class EditableState extends State<Editable> {
 
   ///Create a row after the last row
   createRow() => addOneRow(columns, rows);
-  EditableState({this.rows, this.columns, this.columnCount, this.rowCount});
+  EditableState(
+      {required this.rows,
+      required this.columns,
+      this.columnCount,
+      this.rowCount});
 
   /// Temporarily holds all edited rows
   List<Map<String, dynamic>> _editedRows = [];
@@ -323,11 +327,10 @@ class EditableState extends State<Editable> {
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-    rowCount = rows == null || rows!.isEmpty ? widget.rowCount : rows!.length;
-    columnCount =
-        columns == null || columns!.isEmpty ? columnCount : columns!.length;
-    columns = columns ?? columnBlueprint(columnCount, columns);
-    rows = rows ?? rowBlueprint(rowCount!, columns, rows);
+    rowCount = rows.isEmpty ? widget.rowCount : rows.length;
+    columnCount = columns.isEmpty ? columnCount : columns.length;
+    columns = columns;
+    rows = rows;
 
     /// Builds save snd remove Icons widget
 
@@ -349,7 +352,7 @@ class EditableState extends State<Editable> {
                   rowCount = rowCount! - 1;
 
                   setState(() {
-                    rows = removeOneRow(columns, rows, rows![index]);
+                    rows = removeOneRow(columns, rows, rows[index]);
                   });
                 },
               ),
@@ -389,8 +392,8 @@ class EditableState extends State<Editable> {
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: columns![index]['widthFactor'] != null
-                    ? columns![index]['widthFactor'].toDouble()
+                widthRatio: columns[index]['widthFactor'] != null
+                    ? columns[index]['widthFactor'].toDouble()
                     : widget.columnRatio,
                 thAlignment: widget.thAlignment,
                 thStyle: widget.thStyle,
@@ -415,12 +418,12 @@ class EditableState extends State<Editable> {
             var ckeys = [];
             var cwidths = [];
             var ceditable = <bool>[];
-            columns!.forEach((e) {
+            columns.forEach((e) {
               ckeys.add(e['key']);
               cwidths.add(e['widthFactor'] ?? widget.columnRatio);
               ceditable.add(e['editable'] ?? true);
             });
-            var list = rows![index];
+            var list = rows[index];
             return columnCount! + 1 == (rowIndex + 1)
                 ? _removeSaveIcons(index)
                 : RowBuilder(
