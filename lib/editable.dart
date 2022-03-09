@@ -547,4 +547,10 @@ class EditableState extends State<Editable> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
