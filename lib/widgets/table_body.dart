@@ -38,13 +38,13 @@ class RowBuilder extends StatefulWidget {
   final double _trHeight;
   final Color _borderColor;
   final double _borderWidth;
-  final String cellData;
+  final String? cellData;
   final double? widthRatio;
   final bool isEditable;
   final TextAlign tdAlignment;
   final TextStyle? tdStyle;
   final int index;
-  final EditableColumn col;
+  final String col;
   final double tdPaddingLeft;
   final double tdPaddingTop;
   final double tdPaddingBottom;

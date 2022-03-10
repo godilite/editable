@@ -440,11 +440,11 @@ class EditableState extends State<Editable> {
                 //ignore:non_type_as_type_argument
                 : RowBuilder(
                     index: index,
-                    col: ckeys[rowIndex],
+                    col: ckeys[rowIndex].toString(),
                     trHeight: widget.trHeight,
                     borderColor: widget.borderColor,
                     borderWidth: widget.borderWidth,
-                    cellData: list[ckeys[rowIndex]],
+                    cellData: list[ckeys[rowIndex]].toString(),
                     tdPaddingLeft: widget.tdPaddingLeft,
                     tdPaddingTop: widget.tdPaddingTop,
                     tdPaddingBottom: widget.tdPaddingBottom,
