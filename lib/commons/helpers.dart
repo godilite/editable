@@ -1,3 +1,4 @@
+import 'package:editable/commons/column.dart';
 import 'package:flutter/material.dart';
 
 /// Generates empty columns using the specified columnCount,
@@ -27,16 +28,16 @@ List<Map<String, dynamic>> rowBlueprint(int rowCount,
 
 /// adds a row to existing row lists
 List<Map<String, dynamic>> addOneRow(
-    List<Map<String, dynamic>> columns, List<Map<String, dynamic>> rows) {
+    List<EditableColumn> columns, List<Map<String, dynamic>> rows) {
   var item = <String, dynamic>{};
   columns.forEach((element) {
-    item[element['key']] = '';
+    item[element.key] = '';
   });
   rows.add(item);
   return rows;
 }
 
-List<Map<String, dynamic>> removeOneRow(List<Map<String, dynamic>> columns,
+List<Map<String, dynamic>> removeOneRow(
     List<Map<String, dynamic>> rows, Map<String, dynamic> rowToDelete) {
   rows.remove(rowToDelete);
   return rows;

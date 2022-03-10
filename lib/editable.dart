@@ -5,6 +5,7 @@
 
 library editable;
 
+import 'package:editable/commons/column.dart';
 import 'package:flutter/material.dart';
 import 'commons/helpers.dart';
 import 'widgets/table_body.dart';
@@ -119,7 +120,7 @@ class Editable extends StatefulWidget {
   ///
   /// [key] an identifier preferably a short string
   /// [editable] a boolean, if the column should be editable or not, [true] by default.
-  final List<Map<String, dynamic>> columns;
+  final List<EditableColumn> columns;
 
   /// A data set to create rows
   ///
@@ -310,7 +311,8 @@ class Editable extends StatefulWidget {
 }
 
 class EditableState extends State<Editable> {
-  List<Map<String, dynamic>> rows, columns;
+  List<Map<String, dynamic>> rows;
+  List<EditableColumn> columns;
   int? columnCount;
   int? rowCount;
 
@@ -359,7 +361,7 @@ class EditableState extends State<Editable> {
                   rowCount = rowCount! - 1;
 
                   setState(() {
-                    rows = removeOneRow(columns, rows, rows[index]);
+                    rows = removeOneRow(rows, rows[index]);
                   });
                 },
               ),
@@ -399,8 +401,8 @@ class EditableState extends State<Editable> {
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: columns[index]['widthFactor'] != null
-                    ? columns[index]['widthFactor'].toDouble()
+                widthRatio: columns[index].widthFactor != null
+                    ? columns[index].widthFactor
                     : widget.columnRatio,
                 thAlignment: widget.thAlignment,
                 thStyle: widget.thStyle,
@@ -425,15 +427,19 @@ class EditableState extends State<Editable> {
             var ckeys = [];
             var cwidths = [];
             var ceditable = <bool>[];
+            var ctype = <Type>[];
             columns.forEach((e) {
-              ckeys.add(e['key']);
-              cwidths.add(e['widthFactor'] ?? widget.columnRatio);
-              ceditable.add(e['editable'] ?? true);
+              ckeys.add(e.key);
+              cwidths.add(e.widthFactor ?? widget.columnRatio);
+              ceditable.add(e.editable ?? true);
+              ctype.add(e.typeOf);
             });
             var list = rows[index];
+            Type _type = ctype[rowIndex];
             return columnCount! + 1 == (rowIndex + 1)
                 ? _removeSaveIcons(index)
-                : RowBuilder(
+                //ignore:non_type_as_type_argument
+                : RowBuilder<_type>(
                     index: index,
                     col: ckeys[rowIndex],
                     trHeight: widget.trHeight,

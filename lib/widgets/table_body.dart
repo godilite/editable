@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class RowBuilder extends StatefulWidget {
+class RowBuilder<T> extends StatefulWidget {
   ///Builds row elements for the table
   /// its properties are not nullable
   const RowBuilder({
@@ -26,7 +27,7 @@ class RowBuilder extends StatefulWidget {
     required this.stripeColor2,
     required this.zebraStripe,
     required this.focusedBorder,
-  })   : _trHeight = trHeight,
+  })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
         super(key: key);
@@ -35,7 +36,7 @@ class RowBuilder extends StatefulWidget {
   final double _trHeight;
   final Color _borderColor;
   final double _borderWidth;
-  final cellData;
+  final String cellData;
   final double? widthRatio;
   final bool isEditable;
   final TextAlign tdAlignment;
@@ -52,13 +53,13 @@ class RowBuilder extends StatefulWidget {
   final bool zebraStripe;
   final InputBorder? focusedBorder;
   final ValueChanged<String>? onSubmitted;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<T> onChanged;
 
   @override
-  _RowBuilderState createState() => _RowBuilderState();
+  _RowBuilderState<T> createState() => _RowBuilderState();
 }
 
-class _RowBuilderState extends State<RowBuilder> {
+class _RowBuilderState<T> extends State<RowBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -82,9 +83,20 @@ class _RowBuilderState extends State<RowBuilder> {
                 style: widget.tdStyle,
                 initialValue: widget.cellData.toString(),
                 onFieldSubmitted: widget.onSubmitted,
-                onChanged: widget.onChanged,
+                //TODO: make it generic
+                onChanged: (value) {
+                  if (T == int) {
+                    widget.onChanged(int.parse(value) as T);
+                  } else {
+                    widget.onChanged(value as T);
+                  }
+                },
                 textAlignVertical: TextAlignVertical.center,
                 maxLines: widget.tdEditableMaxLines,
+                inputFormatters: [
+                  if (T == int)
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                ],
                 decoration: InputDecoration(
                   filled: widget.zebraStripe,
                   fillColor: widget.index % 2 == 1.0
