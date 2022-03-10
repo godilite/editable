@@ -427,19 +427,18 @@ class EditableState extends State<Editable> {
             var ckeys = [];
             var cwidths = [];
             var ceditable = <bool>[];
-            var ctype = <Type>[];
+            var cNumOnly = <bool>[];
             columns.forEach((e) {
               ckeys.add(e.key);
               cwidths.add(e.widthFactor ?? widget.columnRatio);
               ceditable.add(e.editable ?? true);
-              ctype.add(e.typeOf);
+              cNumOnly.add(e.useOnlyNumbers);
             });
             var list = rows[index];
-            Type _type = ctype[rowIndex];
             return columnCount! + 1 == (rowIndex + 1)
                 ? _removeSaveIcons(index)
                 //ignore:non_type_as_type_argument
-                : RowBuilder<_type>(
+                : RowBuilder(
                     index: index,
                     col: ckeys[rowIndex],
                     trHeight: widget.trHeight,
@@ -460,6 +459,7 @@ class EditableState extends State<Editable> {
                     focusedBorder: widget.focusedBorder,
                     stripeColor1: widget.stripeColor1,
                     stripeColor2: widget.stripeColor2,
+                    useOnlyNumbers: cNumOnly[rowIndex],
                     onChanged: (value) {
                       ///checks if row has been edited previously
                       var result = editedRows.indexWhere((element) {

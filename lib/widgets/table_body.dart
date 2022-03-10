@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class RowBuilder<T> extends StatefulWidget {
+class RowBuilder extends StatefulWidget {
   ///Builds row elements for the table
   /// its properties are not nullable
   const RowBuilder({
@@ -27,6 +27,7 @@ class RowBuilder<T> extends StatefulWidget {
     required this.stripeColor2,
     required this.zebraStripe,
     required this.focusedBorder,
+    required this.useOnlyNumbers,
   })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -53,13 +54,14 @@ class RowBuilder<T> extends StatefulWidget {
   final bool zebraStripe;
   final InputBorder? focusedBorder;
   final ValueChanged<String>? onSubmitted;
-  final ValueChanged<T> onChanged;
+  final ValueChanged onChanged;
+  final bool useOnlyNumbers;
 
   @override
-  _RowBuilderState<T> createState() => _RowBuilderState();
+  _RowBuilderState createState() => _RowBuilderState();
 }
 
-class _RowBuilderState<T> extends State<RowBuilder<T>> {
+class _RowBuilderState extends State<RowBuilder> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -85,16 +87,16 @@ class _RowBuilderState<T> extends State<RowBuilder<T>> {
                 onFieldSubmitted: widget.onSubmitted,
                 //TODO: make it generic
                 onChanged: (value) {
-                  if (T == int) {
-                    widget.onChanged(int.parse(value) as T);
+                  if (widget.useOnlyNumbers) {
+                    widget.onChanged(int.parse(value));
                   } else {
-                    widget.onChanged(value as T);
+                    widget.onChanged(value);
                   }
                 },
                 textAlignVertical: TextAlignVertical.center,
                 maxLines: widget.tdEditableMaxLines,
                 inputFormatters: [
-                  if (T == int)
+                  if (widget.useOnlyNumbers)
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                 ],
                 decoration: InputDecoration(
