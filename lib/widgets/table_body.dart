@@ -1,3 +1,4 @@
+import 'package:editable/commons/column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,7 +44,7 @@ class RowBuilder extends StatefulWidget {
   final TextAlign tdAlignment;
   final TextStyle? tdStyle;
   final int index;
-  final col;
+  final EditableColumn col;
   final double tdPaddingLeft;
   final double tdPaddingTop;
   final double tdPaddingBottom;
@@ -53,7 +54,7 @@ class RowBuilder extends StatefulWidget {
   final Color stripeColor2;
   final bool zebraStripe;
   final InputBorder? focusedBorder;
-  final ValueChanged<String>? onSubmitted;
+  final ValueChanged? onSubmitted;
   final ValueChanged onChanged;
   final bool useOnlyNumbers;
 
@@ -84,7 +85,15 @@ class _RowBuilderState extends State<RowBuilder> {
                 textAlign: widget.tdAlignment,
                 style: widget.tdStyle,
                 initialValue: widget.cellData.toString(),
-                onFieldSubmitted: widget.onSubmitted,
+                onFieldSubmitted: (value) {
+                  if (widget.onSubmitted != null) {
+                    if (widget.useOnlyNumbers) {
+                      widget.onSubmitted!(int.parse(value));
+                    } else {
+                      widget.onSubmitted!(value);
+                    }
+                  }
+                },
                 //TODO: make it generic
                 onChanged: (value) {
                   if (widget.useOnlyNumbers) {

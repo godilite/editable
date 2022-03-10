@@ -1,3 +1,4 @@
+import 'package:editable/commons/column.dart';
 import 'package:flutter/material.dart';
 
 class THeader extends StatelessWidget {
@@ -8,7 +9,7 @@ class THeader extends StatelessWidget {
       required this.thPaddingTop,
       required this.thPaddingBottom,
       required this.thPaddingRight,
-      required List? headers,
+      required List<EditableColumn>? headers,
       required this.thAlignment,
       required this.thStyle,
       required FontWeight thWeight,
@@ -26,7 +27,7 @@ class THeader extends StatelessWidget {
   final double thPaddingTop;
   final double thPaddingBottom;
   final double thPaddingRight;
-  final List? _headers;
+  final List<EditableColumn>? _headers;
   final TextAlign? thAlignment;
   final TextStyle? thStyle;
   final FontWeight _thWeight;
@@ -48,7 +49,7 @@ class THeader extends StatelessWidget {
               right: thPaddingRight),
           child: Text(
             _headers != null || _headers!.isNotEmpty
-                ? _headers![_index]['title']
+                ? _headers![_index].title
                 : '',
             style:
                 thStyle ?? TextStyle(fontWeight: _thWeight, fontSize: _thSize),

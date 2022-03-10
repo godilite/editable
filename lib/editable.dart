@@ -289,7 +289,7 @@ class Editable extends StatefulWidget {
 
   ///[onSubmitted] callback is triggered when the enter button is pressed on a table data cell
   /// it returns a value of the cell data
-  final ValueChanged<String>? onSubmitted;
+  final ValueChanged? onSubmitted;
 
   /// [onRowSaved] callback is triggered when a [saveButton] is pressed.
   /// returns only values if row is edited, otherwise returns a string ['no edit']
