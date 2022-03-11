@@ -1,4 +1,3 @@
-import 'package:editable/commons/column.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,9 +62,11 @@ class RowBuilder extends StatefulWidget {
 }
 
 class _RowBuilderState extends State<RowBuilder> {
+  bool error = false;
+
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
@@ -94,12 +95,28 @@ class _RowBuilderState extends State<RowBuilder> {
                     }
                   }
                 },
-                //TODO: make it generic
                 onChanged: (value) {
                   if (widget.useOnlyNumbers) {
-                    widget.onChanged(int.parse(value));
+                    final _num = int.tryParse(value);
+                    if (_num == null) {
+                      setState(() {
+                        error = true;
+                      });
+                    } else {
+                      error = false;
+                      widget.onChanged(_num);
+                    }
                   } else {
-                    widget.onChanged(value);
+                    if (value.isEmpty) {
+                      setState(() {
+                        error = true;
+                      });
+                    } else {
+                      setState(() {
+                        error = false;
+                      });
+                      widget.onChanged(value);
+                    }
                   }
                 },
                 textAlignVertical: TextAlignVertical.center,
@@ -110,9 +127,13 @@ class _RowBuilderState extends State<RowBuilder> {
                 ],
                 decoration: InputDecoration(
                   filled: widget.zebraStripe,
-                  fillColor: widget.index % 2 == 1.0
-                      ? widget.stripeColor2
-                      : widget.stripeColor1,
+                  fillColor: !widget.zebraStripe
+                      ? (error ? Colors.red.withOpacity(0.07) : null)
+                      : (error
+                          ? Colors.red.withOpacity(0.07)
+                          : (widget.index % 2 == 1.0
+                              ? widget.stripeColor2
+                              : widget.stripeColor1)),
                   contentPadding: EdgeInsets.only(
                       left: widget.tdPaddingLeft,
                       right: widget.tdPaddingRight,
@@ -141,7 +162,7 @@ class _RowBuilderState extends State<RowBuilder> {
                   widget.cellData.toString(),
                   textAlign: widget.tdAlignment,
                   style: widget.tdStyle ??
-                      TextStyle(
+                      const TextStyle(
                           // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
                           fontSize: 16),
                 ),

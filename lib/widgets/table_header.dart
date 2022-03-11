@@ -36,10 +36,10 @@ class THeader extends StatelessWidget {
   final double? _widthRatio;
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
     return Flexible(
       fit: FlexFit.loose,
-      child: Container(
+      child: SizedBox(
         width: width * _widthRatio!,
         child: Padding(
           padding: EdgeInsets.only(

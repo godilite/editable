@@ -1,11 +1,11 @@
 class MathFunctions {
   int addition(List<int> items) {
-    int sum = items.fold(0, (p, c) => p + c);
+    final sum = items.fold<int>(0, (p, c) => p + c);
     return sum;
   }
 
   int subtraction(List<int> items) {
-    int diff = items.fold(0, (p, c) => c - p);
+    final diff = items.fold<int>(0, (p, c) => c - p);
     return diff;
   }
 }

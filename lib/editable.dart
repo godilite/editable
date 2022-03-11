@@ -19,7 +19,8 @@ class Editable extends StatefulWidget {
   /// [rowCount] and [columnCount] properties must be set
   /// this will generate an empty table
   ///
-  /// it is useful for rendering data from an API or to create a spreadsheet-like
+  /// it is useful for rendering data from an API or to create a
+  /// spreadsheet-like
   /// data table
   ///
   /// example:
@@ -45,7 +46,7 @@ class Editable extends StatefulWidget {
   ///   );
   /// }
   /// ```
-  Editable({
+  const Editable({
     Key? key,
     required this.columns,
     required this.rows,
@@ -112,14 +113,16 @@ class Editable extends StatefulWidget {
   /// ```
   /// [title] is the column heading
   ///
-  /// [widthFactor] a custom size ratio of each column width, if not provided, defaults to  [columnRatio = 0.20]
+  /// [widthFactor] a custom size ratio of each column width, if not
+  /// provided, defaults to  [columnRatio = 0.20]
   /// ```dart
   /// 'widthFactor': 0.1 //gives 10% of screen size to the column
   /// 'widthFactor': 0.2 //gives 20% of screen size to the column
   /// ```
   ///
   /// [key] an identifier preferably a short string
-  /// [editable] a boolean, if the column should be editable or not, [true] by default.
+  /// [editable] a boolean, if the column should be editable or not, [true]
+  /// by default.
   final List<EditableColumn> columns;
 
   /// A data set to create rows
@@ -139,12 +142,12 @@ class Editable extends StatefulWidget {
 
   final List<Map<String, dynamic>> rows;
 
-  /// Interger value of number of rows to be generated:
+  /// Integer value of number of rows to be generated:
   ///
   /// Optional if row data is provided
   final int rowCount;
 
-  /// Interger value of number of columns to be generated:
+  /// Integer value of number of columns to be generated:
   ///
   /// Optional if column data is provided
   final int columnCount;
@@ -179,7 +182,9 @@ class Editable extends StatefulWidget {
   /// Style the table data
   final TextStyle? tdStyle;
 
-  /// Max lines allowed in editable text, default: 1 (longer data will not wrap and be hidden), setting to 100 will allow wrapping and not increase row size
+  /// Max lines allowed in editable text, default: 1 (longer data will not wrap
+  /// and be hidden), setting to 100 will allow wrapping and not increase row
+  ///  size
   final int tdEditableMaxLines;
 
   /// Table header cell padding left
@@ -197,7 +202,8 @@ class Editable extends StatefulWidget {
   /// Aligns the table header
   final TextAlign thAlignment;
 
-  /// Style the table header - use for more control of header style, using this OVERRIDES the thWeight and thSize parameters and those will be ignored.
+  /// Style the table header - use for more control of header style, using this
+  /// OVERRIDES the thWeight and thSize parameters and those will be ignored.
   final TextStyle? thStyle;
 
   /// Table headers fontweight (use thStyle for more control of header style)
@@ -213,12 +219,12 @@ class Editable extends StatefulWidget {
   /// cannot be less than 40.0
   final double trHeight;
 
-  /// Toogles the save button,
+  /// Toggles the save button,
   /// if [true] displays an icon to save rows,
   /// adds an addition column to the right
   final bool showSaveIcon;
 
-  /// Toogles the remove button,
+  /// Toggles the remove button,
   /// if [true] displays an icon to remove rows,
   /// adds an addition column to the right
   final bool showRemoveIcon;
@@ -287,12 +293,14 @@ class Editable extends StatefulWidget {
 
   final InputBorder? focusedBorder;
 
-  ///[onSubmitted] callback is triggered when the enter button is pressed on a table data cell
+  ///[onSubmitted] callback is triggered when the enter button is pressed on a
+  ///table data cell
   /// it returns a value of the cell data
   final ValueChanged? onSubmitted;
 
   /// [onRowSaved] callback is triggered when a [saveButton] is pressed.
-  /// returns only values if row is edited, otherwise returns a string ['no edit']
+  /// returns only values if row is edited, otherwise returns a string
+  /// ['no edit']
   final ValueChanged<dynamic>? onRowSaved;
 
   /// [onCellValueChanged] callback is triggered when cell value changes and
@@ -303,16 +311,10 @@ class Editable extends StatefulWidget {
   final bool scrollbarAlwaysVisible;
 
   @override
-  EditableState createState() => EditableState(
-      rows: this.rows,
-      columns: this.columns,
-      rowCount: this.rowCount,
-      columnCount: this.columnCount);
+  EditableState createState() => EditableState();
 }
 
 class EditableState extends State<Editable> {
-  List<Map<String, dynamic>> rows;
-  List<EditableColumn> columns;
   int? columnCount;
   int? rowCount;
 
@@ -320,74 +322,66 @@ class EditableState extends State<Editable> {
   List<Map<String, dynamic>> get editedRows => _editedRows;
 
   ///Create a row after the last row
-  createRow() => addOneRow(columns, rows);
-  EditableState(
-      {required this.rows,
-      required this.columns,
-      this.columnCount,
-      this.rowCount});
+  List<Map<String, dynamic>> createRow() =>
+      addOneRow(widget.columns, widget.rows);
 
   /// Temporarily holds all edited rows
-  List<Map<String, dynamic>> _editedRows = [];
+  final List<Map<String, dynamic>> _editedRows = [];
 
   /// Controller for the scrollbar
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     /// initial Setup of columns and row, sets count of column and row
-    rowCount = rows.isEmpty ? widget.rowCount : rows.length;
-    columnCount = columns.isEmpty ? columnCount : columns.length;
-    columns = columns;
-    rows = rows;
+    rowCount = widget.rows.isEmpty ? widget.rowCount : widget.rows.length;
+    columnCount = widget.columns.isEmpty ? columnCount : widget.columns.length;
+    final _columns = widget.columns;
+    var _rows = widget.rows;
 
     /// Builds save snd remove Icons widget
 
-    Widget _removeSaveIcons(index) {
+    Widget _removeSaveIcons(int index) {
       return Row(
         children: <Widget>[
-          Container(
-            child: Visibility(
-              visible: widget.showRemoveIcon,
-              child: IconButton(
-                // padding: EdgeInsets.only(right: widget.tdPaddingRight),
-                hoverColor: Colors.transparent,
-                icon: Icon(
-                  widget.removeIcon,
-                  color: widget.removeIconColor,
-                  size: widget.removeIconSize,
-                ),
-                onPressed: () {
-                  rowCount = rowCount! - 1;
-
-                  setState(() {
-                    rows = removeOneRow(rows, rows[index]);
-                  });
-                },
+          Visibility(
+            visible: widget.showRemoveIcon,
+            child: IconButton(
+              // padding: EdgeInsets.only(right: widget.tdPaddingRight),
+              hoverColor: Colors.transparent,
+              icon: Icon(
+                widget.removeIcon,
+                color: widget.removeIconColor,
+                size: widget.removeIconSize,
               ),
+              onPressed: () {
+                rowCount = rowCount! - 1;
+
+                setState(() {
+                  _rows = removeOneRow(_rows, _rows[index]);
+                });
+              },
             ),
           ),
-          Container(
-            child: Visibility(
-              visible: widget.showSaveIcon,
-              child: IconButton(
-                // padding: EdgeInsets.only(right: widget.tdPaddingRight),
-                hoverColor: Colors.transparent,
-                icon: Icon(
-                  widget.saveIcon,
-                  color: widget.saveIconColor,
-                  size: widget.saveIconSize,
-                ),
-                onPressed: () {
-                  int rowIndex = editedRows.indexWhere(
-                      (element) => element['row'] == index ? true : false);
-                  if (rowIndex != -1) {
-                    widget.onRowSaved!(editedRows[rowIndex]);
-                  } else {
-                    widget.onRowSaved!('no edit');
-                  }
-                },
+          Visibility(
+            visible: widget.showSaveIcon,
+            child: IconButton(
+              // padding: EdgeInsets.only(right: widget.tdPaddingRight),
+              hoverColor: Colors.transparent,
+              icon: Icon(
+                widget.saveIcon,
+                color: widget.saveIconColor,
+                size: widget.saveIconSize,
               ),
+              onPressed: () {
+                final rowIndex =
+                    editedRows.indexWhere((element) => element['row'] == index);
+                if (rowIndex != -1) {
+                  widget.onRowSaved!(editedRows[rowIndex]);
+                } else {
+                  widget.onRowSaved!('no edit');
+                }
+              },
             ),
           ),
         ],
@@ -401,87 +395,117 @@ class EditableState extends State<Editable> {
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: columns[index].widthFactor != null
-                    ? columns[index].widthFactor
-                    : widget.columnRatio,
+                widthRatio: _columns[index].widthFactor ?? widget.columnRatio,
                 thAlignment: widget.thAlignment,
                 thStyle: widget.thStyle,
                 thPaddingLeft: widget.thPaddingLeft,
                 thPaddingTop: widget.thPaddingTop,
                 thPaddingBottom: widget.thPaddingBottom,
                 thPaddingRight: widget.thPaddingRight,
-                headers: columns,
+                headers: _columns,
                 thWeight: widget.thWeight,
                 thSize: widget.thSize,
                 index: index);
       });
     }
 
+    Widget createButton() {
+      return Visibility(
+        visible: widget.showCreateButton,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 4.0, bottom: 4),
+          child: InkWell(
+            onTap: () {
+              _rows = addOneRow(_columns, _rows);
+              rowCount = rowCount! + 1;
+              setState(() {});
+            },
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: widget.createButtonColor ?? Colors.white,
+                boxShadow: [
+                  BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
+                ],
+                borderRadius: BorderRadius.circular(10),
+                shape: BoxShape.rectangle,
+              ),
+              child: widget.createButtonIcon ?? const Icon(Icons.add),
+            ),
+          ),
+        ),
+      );
+    }
+
     /// Generates table rows
-    List<Widget> _tableRows() {
-      return List<Widget>.generate(rowCount!, (index) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(columnCount! + 1, (rowIndex) {
-            var ckeys = [];
-            var cwidths = [];
-            var ceditable = <bool>[];
-            var cNumOnly = <bool>[];
-            columns.forEach((e) {
-              ckeys.add(e.key);
-              cwidths.add(e.widthFactor ?? widget.columnRatio);
-              ceditable.add(e.editable ?? true);
-              cNumOnly.add(e.useOnlyNumbers);
-            });
-            var list = rows[index];
-            return columnCount! + 1 == (rowIndex + 1)
-                ? _removeSaveIcons(index)
-                //ignore:non_type_as_type_argument
-                : RowBuilder(
-                    index: index,
-                    col: ckeys[rowIndex].toString(),
-                    trHeight: widget.trHeight,
-                    borderColor: widget.borderColor,
-                    borderWidth: widget.borderWidth,
-                    cellData: list[ckeys[rowIndex]].toString(),
-                    tdPaddingLeft: widget.tdPaddingLeft,
-                    tdPaddingTop: widget.tdPaddingTop,
-                    tdPaddingBottom: widget.tdPaddingBottom,
-                    tdPaddingRight: widget.tdPaddingRight,
-                    tdAlignment: widget.tdAlignment,
-                    tdStyle: widget.tdStyle,
-                    tdEditableMaxLines: widget.tdEditableMaxLines,
-                    onSubmitted: widget.onSubmitted,
-                    widthRatio: cwidths[rowIndex].toDouble(),
-                    isEditable: ceditable[rowIndex],
-                    zebraStripe: widget.zebraStripe,
-                    focusedBorder: widget.focusedBorder,
-                    stripeColor1: widget.stripeColor1,
-                    stripeColor2: widget.stripeColor2,
-                    useOnlyNumbers: cNumOnly[rowIndex],
-                    onChanged: (value) {
-                      ///checks if row has been edited previously
-                      var result = editedRows.indexWhere((element) {
-                        return element['row'] != index ? false : true;
-                      });
+    Widget _tableRows() {
+      return ListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: rowCount!,
+          itemBuilder: (context, index) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(columnCount! + 1, (rowIndex) {
+                final ckeys = <String>[];
+                final cwidths = <double>[];
+                final ceditable = <bool>[];
+                final cNumOnly = <bool>[];
+                for (final e in _columns) {
+                  ckeys.add(e.key);
+                  cwidths.add(e.widthFactor ?? widget.columnRatio);
+                  ceditable.add(e.editable ?? true);
+                  cNumOnly.add(e.useOnlyNumbers);
+                }
+                final list = _rows[index];
+                return columnCount! + 1 == (rowIndex + 1)
+                    ? _removeSaveIcons(index)
+                    //ignore:non_type_as_type_argument
+                    : RowBuilder(
+                        index: index,
+                        col: ckeys[rowIndex].toString(),
+                        trHeight: widget.trHeight,
+                        borderColor: widget.borderColor,
+                        borderWidth: widget.borderWidth,
+                        cellData: list[ckeys[rowIndex]].toString(),
+                        tdPaddingLeft: widget.tdPaddingLeft,
+                        tdPaddingTop: widget.tdPaddingTop,
+                        tdPaddingBottom: widget.tdPaddingBottom,
+                        tdPaddingRight: widget.tdPaddingRight,
+                        tdAlignment: widget.tdAlignment,
+                        tdStyle: widget.tdStyle,
+                        tdEditableMaxLines: widget.tdEditableMaxLines,
+                        onSubmitted: widget.onSubmitted,
+                        widthRatio: cwidths[rowIndex].toDouble(),
+                        isEditable: ceditable[rowIndex],
+                        zebraStripe: widget.zebraStripe,
+                        focusedBorder: widget.focusedBorder,
+                        stripeColor1: widget.stripeColor1,
+                        stripeColor2: widget.stripeColor2,
+                        useOnlyNumbers: cNumOnly[rowIndex],
+                        //ignore:implicit_dynamic_parameter
+                        onChanged: (value) {
+                          ///checks if row has been edited previously
+                          final result = editedRows.indexWhere((element) {
+                            return element['row'] != index;
+                          });
 
-                      ///adds a new edited data to a temporary holder
-                      if (result != -1) {
-                        editedRows[result][ckeys[rowIndex]] = value;
-                      } else {
-                        var temp = <String, dynamic>{};
-                        temp['row'] = index;
-                        temp[ckeys[rowIndex]] = value;
-                        editedRows.add(temp);
-                      }
+                          ///adds a new edited data to a temporary holder
+                          if (result != -1) {
+                            editedRows[result][ckeys[rowIndex]] = value;
+                          } else {
+                            final temp = <String, dynamic>{};
+                            temp['row'] = index;
+                            temp[ckeys[rowIndex]] = value;
+                            editedRows.add(temp);
+                          }
 
-                      widget.onCellValueChanged?.call(editedRows);
-                    },
-                  );
-          }),
-        );
-      });
+                          widget.onCellValueChanged?.call(editedRows);
+                        },
+                      );
+              }),
+            );
+          });
     }
 
     return Material(
@@ -494,31 +518,28 @@ class EditableState extends State<Editable> {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
-            child:
-                Column(crossAxisAlignment: widget.createButtonAlign, children: [
-              //Table Header
-              createButton(),
-              Container(
-                padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(
-                            color: widget.borderColor,
-                            width: widget.borderWidth))),
-                child: Row(
-                    crossAxisAlignment: widget.thVertAlignment,
-                    mainAxisSize: MainAxisSize.min,
-                    children: _tableHeaders()),
-              ),
-
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: _tableRows(),
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: widget.createButtonAlign,
+                children: [
+                  //Table Header
+                  createButton(),
+                  Container(
+                    padding: EdgeInsets.only(bottom: widget.thPaddingBottom),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: widget.borderColor,
+                                width: widget.borderWidth))),
+                    child: Row(
+                        crossAxisAlignment: widget.thVertAlignment,
+                        mainAxisSize: MainAxisSize.min,
+                        children: _tableHeaders()),
                   ),
-                ),
-              )
-            ]),
+                  Expanded(
+                    child: _tableRows(),
+                  )
+                ]),
           ),
         ),
       ),
@@ -526,33 +547,6 @@ class EditableState extends State<Editable> {
   }
 
   /// Button for creating a new empty row
-  Widget createButton() {
-    return Visibility(
-      visible: widget.showCreateButton,
-      child: Padding(
-        padding: EdgeInsets.only(left: 4.0, bottom: 4),
-        child: InkWell(
-          onTap: () {
-            rows = addOneRow(columns, rows);
-            rowCount = rowCount! + 1;
-            setState(() {});
-          },
-          child: Container(
-            padding: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: widget.createButtonColor ?? Colors.white,
-              boxShadow: [
-                BoxShadow(blurRadius: 2, color: Colors.grey.shade400)
-              ],
-              borderRadius: BorderRadius.circular(10),
-              shape: BoxShape.rectangle,
-            ),
-            child: widget.createButtonIcon ?? Icon(Icons.add),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   void dispose() {

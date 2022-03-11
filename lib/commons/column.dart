@@ -9,7 +9,7 @@ class EditableColumn {
     required this.key,
     required this.title,
     this.widthFactor,
-    this.editable = true,
+    this.editable = false,
     this.useOnlyNumbers = false,
   });
 }
