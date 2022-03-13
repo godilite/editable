@@ -333,11 +333,24 @@ class EditableState extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
+    final scrWidth = MediaQuery.of(context).size.width;
+
     /// initial Setup of columns and row, sets count of column and row
     rowCount = widget.rows.isEmpty ? widget.rowCount : widget.rows.length;
     columnCount = widget.columns.isEmpty ? columnCount : widget.columns.length;
     final _columns = widget.columns;
     var _rows = widget.rows;
+
+    final ckeys = <String>[];
+    final cwidths = <double>[];
+    final ceditable = <bool>[];
+    final cNumOnly = <bool>[];
+    for (final e in _columns) {
+      ckeys.add(e.key);
+      cwidths.add(e.widthFactor ?? widget.columnRatio);
+      ceditable.add(e.editable ?? true);
+      cNumOnly.add(e.useOnlyNumbers);
+    }
 
     /// Builds save snd remove Icons widget
 
@@ -395,7 +408,8 @@ class EditableState extends State<Editable> {
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
-                widthRatio: _columns[index].widthFactor ?? widget.columnRatio,
+                widthRatio:
+                    widget.columns[index].widthFactor ?? widget.columnRatio,
                 thAlignment: widget.thAlignment,
                 thStyle: widget.thStyle,
                 thPaddingLeft: widget.thPaddingLeft,
@@ -437,74 +451,70 @@ class EditableState extends State<Editable> {
       );
     }
 
+    Widget _tableRow(int index) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(columnCount! + 1, (rowIndex) {
+          final list = _rows[index];
+          return columnCount! + 1 == (rowIndex + 1)
+              ? _removeSaveIcons(index)
+              //ignore:non_type_as_type_argument
+              : RowBuilder(
+                  index: index,
+                  col: ckeys[rowIndex].toString(),
+                  trHeight: widget.trHeight,
+                  borderColor: widget.borderColor,
+                  borderWidth: widget.borderWidth,
+                  cellData: list[ckeys[rowIndex]].toString(),
+                  tdPaddingLeft: widget.tdPaddingLeft,
+                  tdPaddingTop: widget.tdPaddingTop,
+                  tdPaddingBottom: widget.tdPaddingBottom,
+                  tdPaddingRight: widget.tdPaddingRight,
+                  tdAlignment: widget.tdAlignment,
+                  tdStyle: widget.tdStyle,
+                  tdEditableMaxLines: widget.tdEditableMaxLines,
+                  onSubmitted: widget.onSubmitted,
+                  widthRatio: cwidths[rowIndex].toDouble(),
+                  isEditable: ceditable[rowIndex],
+                  zebraStripe: widget.zebraStripe,
+                  focusedBorder: widget.focusedBorder,
+                  stripeColor1: widget.stripeColor1,
+                  stripeColor2: widget.stripeColor2,
+                  useOnlyNumbers: cNumOnly[rowIndex],
+                  //ignore:implicit_dynamic_parameter
+                  onChanged: (value) {
+                    ///checks if row has been edited previously
+                    final result = editedRows.indexWhere((element) {
+                      return element['row'] != index;
+                    });
+
+                    ///adds a new edited data to a temporary holder
+                    if (result != -1) {
+                      editedRows[result][ckeys[rowIndex]] = value;
+                    } else {
+                      final temp = <String, dynamic>{};
+                      temp['row'] = index;
+                      temp[ckeys[rowIndex]] = value;
+                      editedRows.add(temp);
+                    }
+
+                    widget.onCellValueChanged?.call(editedRows);
+                  },
+                );
+        }),
+      );
+    }
+
     /// Generates table rows
     Widget _tableRows() {
       return ListView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemCount: rowCount!,
           itemBuilder: (context, index) {
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(columnCount! + 1, (rowIndex) {
-                final ckeys = <String>[];
-                final cwidths = <double>[];
-                final ceditable = <bool>[];
-                final cNumOnly = <bool>[];
-                for (final e in _columns) {
-                  ckeys.add(e.key);
-                  cwidths.add(e.widthFactor ?? widget.columnRatio);
-                  ceditable.add(e.editable ?? true);
-                  cNumOnly.add(e.useOnlyNumbers);
-                }
-                final list = _rows[index];
-                return columnCount! + 1 == (rowIndex + 1)
-                    ? _removeSaveIcons(index)
-                    //ignore:non_type_as_type_argument
-                    : RowBuilder(
-                        index: index,
-                        col: ckeys[rowIndex].toString(),
-                        trHeight: widget.trHeight,
-                        borderColor: widget.borderColor,
-                        borderWidth: widget.borderWidth,
-                        cellData: list[ckeys[rowIndex]].toString(),
-                        tdPaddingLeft: widget.tdPaddingLeft,
-                        tdPaddingTop: widget.tdPaddingTop,
-                        tdPaddingBottom: widget.tdPaddingBottom,
-                        tdPaddingRight: widget.tdPaddingRight,
-                        tdAlignment: widget.tdAlignment,
-                        tdStyle: widget.tdStyle,
-                        tdEditableMaxLines: widget.tdEditableMaxLines,
-                        onSubmitted: widget.onSubmitted,
-                        widthRatio: cwidths[rowIndex].toDouble(),
-                        isEditable: ceditable[rowIndex],
-                        zebraStripe: widget.zebraStripe,
-                        focusedBorder: widget.focusedBorder,
-                        stripeColor1: widget.stripeColor1,
-                        stripeColor2: widget.stripeColor2,
-                        useOnlyNumbers: cNumOnly[rowIndex],
-                        //ignore:implicit_dynamic_parameter
-                        onChanged: (value) {
-                          ///checks if row has been edited previously
-                          final result = editedRows.indexWhere((element) {
-                            return element['row'] != index;
-                          });
-
-                          ///adds a new edited data to a temporary holder
-                          if (result != -1) {
-                            editedRows[result][ckeys[rowIndex]] = value;
-                          } else {
-                            final temp = <String, dynamic>{};
-                            temp['row'] = index;
-                            temp[ckeys[rowIndex]] = value;
-                            editedRows.add(temp);
-                          }
-
-                          widget.onCellValueChanged?.call(editedRows);
-                        },
-                      );
-              }),
-            );
+            return _tableRow(index);
           });
     }
 
@@ -516,9 +526,13 @@ class EditableState extends State<Editable> {
           isAlwaysShown: widget.scrollbarAlwaysVisible,
           controller: _scrollController,
           child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
-            child: Column(
+            child: SizedBox(
+              width: 10000,
+              height: MediaQuery.of(context).size.height - 200,
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: widget.createButtonAlign,
                 children: [
@@ -536,10 +550,11 @@ class EditableState extends State<Editable> {
                         mainAxisSize: MainAxisSize.min,
                         children: _tableHeaders()),
                   ),
-                  Expanded(
-                    child: _tableRows(),
-                  )
-                ]),
+
+                  _tableRows(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
