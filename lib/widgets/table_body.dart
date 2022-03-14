@@ -6,7 +6,6 @@ class RowBuilder extends StatefulWidget {
   /// its properties are not nullable
   const RowBuilder({
     Key? key,
-    required this.screenWidth,
     required this.tdAlignment,
     required this.tdStyle,
     required double trHeight,
@@ -29,6 +28,8 @@ class RowBuilder extends StatefulWidget {
     required this.zebraStripe,
     required this.focusedBorder,
     required this.useOnlyNumbers,
+    required this.screenWidth,
+    required this.editMode,
   })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -58,6 +59,7 @@ class RowBuilder extends StatefulWidget {
   final ValueChanged onChanged;
   final bool useOnlyNumbers;
   final double screenWidth;
+  final bool editMode;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -68,107 +70,103 @@ class _RowBuilderState extends State<RowBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.loose,
-      flex: 6,
-      child: Container(
-        height: widget._trHeight < 40 ? 40 : widget._trHeight,
-        width: widget.screenWidth * widget.widthRatio!,
-        decoration: BoxDecoration(
-            color: !widget.zebraStripe
-                ? null
-                : (widget.index % 2 == 1.0
-                    ? widget.stripeColor2
-                    : widget.stripeColor1),
-            border: Border.all(
-                color: widget._borderColor, width: widget._borderWidth)),
-        child: widget.isEditable
-            ? TextFormField(
-                textAlign: widget.tdAlignment,
-                style: widget.tdStyle,
-                initialValue: widget.cellData.toString(),
-                onFieldSubmitted: (value) {
-                  if (widget.onSubmitted != null) {
-                    if (widget.useOnlyNumbers) {
-                      widget.onSubmitted!(int.parse(value));
-                    } else {
-                      widget.onSubmitted!(value);
-                    }
-                  }
-                },
-                onChanged: (value) {
+    return Container(
+      height: widget._trHeight < 40 ? 40 : widget._trHeight,
+      width: widget.screenWidth * widget.widthRatio!,
+      decoration: BoxDecoration(
+          color: !widget.zebraStripe
+              ? null
+              : (widget.index % 2 == 1.0
+                  ? widget.stripeColor2
+                  : widget.stripeColor1),
+          border: Border.all(
+              color: widget._borderColor, width: widget._borderWidth)),
+      child: widget.editMode
+          ? TextFormField(
+              textAlign: widget.tdAlignment,
+              style: widget.tdStyle,
+              initialValue: widget.cellData.toString(),
+              onFieldSubmitted: (value) {
+                if (widget.onSubmitted != null) {
                   if (widget.useOnlyNumbers) {
-                    final _num = int.tryParse(value);
-                    if (_num == null) {
-                      setState(() {
-                        error = true;
-                      });
-                    } else {
-                      error = false;
-                      widget.onChanged(_num);
-                    }
+                    widget.onSubmitted!(int.parse(value));
                   } else {
-                    if (value.isEmpty) {
-                      setState(() {
-                        error = true;
-                      });
-                    } else {
-                      setState(() {
-                        error = false;
-                      });
-                      widget.onChanged(value);
-                    }
+                    widget.onSubmitted!(value);
                   }
-                },
-                textAlignVertical: TextAlignVertical.center,
-                maxLines: widget.tdEditableMaxLines,
-                inputFormatters: [
-                  if (widget.useOnlyNumbers)
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                ],
-                decoration: InputDecoration(
-                  filled: widget.zebraStripe,
-                  fillColor: !widget.zebraStripe
-                      ? (error ? Colors.red.withOpacity(0.07) : null)
-                      : (error
-                          ? Colors.red.withOpacity(0.07)
-                          : (widget.index % 2 == 1.0
-                              ? widget.stripeColor2
-                              : widget.stripeColor1)),
-                  contentPadding: EdgeInsets.only(
-                      left: widget.tdPaddingLeft,
-                      right: widget.tdPaddingRight,
-                      top: widget.tdPaddingTop,
-                      bottom: widget.tdPaddingBottom),
-                  border: InputBorder.none,
-                  focusedBorder: widget.focusedBorder,
-                ),
-              )
-            : Container(
-                alignment: Alignment.centerLeft,
-                padding: EdgeInsets.only(
-                  left: widget.tdPaddingLeft,
-                  right: widget.tdPaddingRight,
-                  // top: widget.tdPaddingTop,
-                  // bottom: widget.tdPaddingBottom,
-                ),
-                decoration: BoxDecoration(
-                  color: !widget.zebraStripe
-                      ? null
-                      : (widget.index % 2 == 1.0
-                          ? widget.stripeColor2
-                          : widget.stripeColor1),
-                ),
-                child: Text(
-                  widget.cellData.toString(),
-                  textAlign: widget.tdAlignment,
-                  style: widget.tdStyle ??
-                      const TextStyle(
-                          // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
-                          fontSize: 16),
-                ),
+                }
+              },
+              onChanged: (value) {
+                if (widget.useOnlyNumbers) {
+                  final _num = int.tryParse(value);
+                  if (_num == null) {
+                    setState(() {
+                      error = true;
+                    });
+                  } else {
+                    error = false;
+                    widget.onChanged(_num);
+                  }
+                } else {
+                  if (value.isEmpty) {
+                    setState(() {
+                      error = true;
+                    });
+                  } else {
+                    setState(() {
+                      error = false;
+                    });
+                    widget.onChanged(value);
+                  }
+                }
+              },
+              textAlignVertical: TextAlignVertical.center,
+              maxLines: widget.tdEditableMaxLines,
+              inputFormatters: [
+                if (widget.useOnlyNumbers)
+                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+              ],
+              decoration: InputDecoration(
+                filled: widget.zebraStripe,
+                fillColor: !widget.zebraStripe
+                    ? (error ? Colors.red.withOpacity(0.07) : null)
+                    : (error
+                        ? Colors.red.withOpacity(0.07)
+                        : (widget.index % 2 == 1.0
+                            ? widget.stripeColor2
+                            : widget.stripeColor1)),
+                contentPadding: EdgeInsets.only(
+                    left: widget.tdPaddingLeft,
+                    right: widget.tdPaddingRight,
+                    top: widget.tdPaddingTop,
+                    bottom: widget.tdPaddingBottom),
+                border: InputBorder.none,
+                focusedBorder: widget.focusedBorder,
               ),
-      ),
+            )
+          : Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(
+                left: widget.tdPaddingLeft,
+                right: widget.tdPaddingRight,
+                // top: widget.tdPaddingTop,
+                // bottom: widget.tdPaddingBottom,
+              ),
+              decoration: BoxDecoration(
+                color: !widget.zebraStripe
+                    ? null
+                    : (widget.index % 2 == 1.0
+                        ? widget.stripeColor2
+                        : widget.stripeColor1),
+              ),
+              child: Text(
+                widget.cellData.toString(),
+                textAlign: widget.tdAlignment,
+                style: widget.tdStyle ??
+                    const TextStyle(
+                        // fontSize: Theme.of(context).textTheme.bodyText1.fontSize), // returns 14?
+                        fontSize: 16),
+              ),
+            ),
     );
   }
 }

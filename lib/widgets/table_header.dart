@@ -36,26 +36,23 @@ class THeader extends StatelessWidget {
   final double _thSize;
   final int _index;
   final double? _widthRatio;
+
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      fit: FlexFit.loose,
-      child: SizedBox(
-        width: screenWidth * _widthRatio!,
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: thPaddingLeft,
-              top: thPaddingTop,
-              bottom: thPaddingBottom,
-              right: thPaddingRight),
-          child: Text(
-            _headers != null || _headers!.isNotEmpty
-                ? _headers![_index].title
-                : '',
-            style:
-                thStyle ?? TextStyle(fontWeight: _thWeight, fontSize: _thSize),
-            textAlign: thAlignment ?? TextAlign.start,
-          ),
+    return SizedBox(
+      width: screenWidth * _widthRatio!,
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: thPaddingLeft,
+            top: thPaddingTop,
+            bottom: thPaddingBottom,
+            right: thPaddingRight),
+        child: Text(
+          _headers != null || _headers!.isNotEmpty
+              ? _headers![_index].title
+              : '',
+          style: thStyle ?? TextStyle(fontWeight: _thWeight, fontSize: _thSize),
+          textAlign: thAlignment ?? TextAlign.start,
         ),
       ),
     );

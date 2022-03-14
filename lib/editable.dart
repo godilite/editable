@@ -94,6 +94,8 @@ class Editable extends StatefulWidget {
     this.focusedBorder,
     this.onCellValueChanged,
     this.scrollbarAlwaysVisible = false,
+    required this.tableWidth,
+    required this.tableHeight,
   }) : super(key: key);
 
   /// A data set to create headers
@@ -310,6 +312,12 @@ class Editable extends StatefulWidget {
   /// Whether the horizontal scrollbar is always visible.
   final bool scrollbarAlwaysVisible;
 
+  /// Width of the table.
+  final double tableWidth;
+
+  /// Height of the table.
+  final double tableHeight;
+
   @override
   EditableState createState() => EditableState();
 }
@@ -333,7 +341,7 @@ class EditableState extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
-    final scrWidth = MediaQuery.of(context).size.width;
+    final widthOfEditButton = 24.0;
 
     /// initial Setup of columns and row, sets count of column and row
     rowCount = widget.rows.isEmpty ? widget.rowCount : widget.rows.length;
@@ -402,26 +410,31 @@ class EditableState extends State<Editable> {
     }
 
     /// Generates table columns
-    List<Widget> _tableHeaders(double screenWidth) {
-      return List<Widget>.generate(columnCount! + 1, (index) {
-        return columnCount! + 1 == (index + 1)
-            ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
-                widget.thPaddingBottom)
-            : THeader(
-                screenWidth: screenWidth,
-                widthRatio:
-                    widget.columns[index].widthFactor ?? widget.columnRatio,
-                thAlignment: widget.thAlignment,
-                thStyle: widget.thStyle,
-                thPaddingLeft: widget.thPaddingLeft,
-                thPaddingTop: widget.thPaddingTop,
-                thPaddingBottom: widget.thPaddingBottom,
-                thPaddingRight: widget.thPaddingRight,
-                headers: _columns,
-                thWeight: widget.thWeight,
-                thSize: widget.thSize,
-                index: index);
-      });
+    List<Widget> _tableHeaders() {
+      return [
+        SizedBox(
+          width: widthOfEditButton,
+        ),
+        ...List<Widget>.generate(columnCount! + 1, (index) {
+          return columnCount! + 1 == (index + 1)
+              ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
+                  widget.thPaddingBottom)
+              : THeader(
+                  screenWidth: widget.tableWidth,
+                  widthRatio:
+                      widget.columns[index].widthFactor ?? widget.columnRatio,
+                  thAlignment: widget.thAlignment,
+                  thStyle: widget.thStyle,
+                  thPaddingLeft: widget.thPaddingLeft,
+                  thPaddingTop: widget.thPaddingTop,
+                  thPaddingBottom: widget.thPaddingBottom,
+                  thPaddingRight: widget.thPaddingRight,
+                  headers: _columns,
+                  thWeight: widget.thWeight,
+                  thSize: widget.thSize,
+                  index: index);
+        })
+      ];
     }
 
     Widget createButton() {
@@ -452,22 +465,26 @@ class EditableState extends State<Editable> {
       );
     }
 
-    Widget _tableRow(int index, double screenWidth) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(columnCount! + 1, (rowIndex) {
-          final list = _rows[index];
-          return columnCount! + 1 == (rowIndex + 1)
-              ? _removeSaveIcons(index)
-              //ignore:non_type_as_type_argument
-              : RowBuilder(
+    /// Generates table rows
+    Widget _tableRows() {
+      return ListView.builder(
+          padding: EdgeInsets.zero,
+          scrollDirection: Axis.vertical,
+          itemCount: rowCount!,
+          itemBuilder: (context, index) {
+            return _RowBuilder(
+              cellKeys: ckeys,
+              columnCount: columnCount!,
+              rows: _rows,
+              columnIndex: index,
+              cellBuilder: (context, rowIndex, cellData, editMode) {
+                return RowBuilder(
                   index: index,
                   col: ckeys[rowIndex].toString(),
                   trHeight: widget.trHeight,
                   borderColor: widget.borderColor,
                   borderWidth: widget.borderWidth,
-                  cellData: list[ckeys[rowIndex]].toString(),
+                  cellData: cellData,
                   tdPaddingLeft: widget.tdPaddingLeft,
                   tdPaddingTop: widget.tdPaddingTop,
                   tdPaddingBottom: widget.tdPaddingBottom,
@@ -483,7 +500,8 @@ class EditableState extends State<Editable> {
                   stripeColor1: widget.stripeColor1,
                   stripeColor2: widget.stripeColor2,
                   useOnlyNumbers: cNumOnly[rowIndex],
-                  screenWidth: screenWidth,
+                  screenWidth: widget.tableWidth,
+                  editMode: editMode,
                   //ignore:implicit_dynamic_parameter
                   onChanged: (value) {
                     ///checks if row has been edited previously
@@ -504,19 +522,9 @@ class EditableState extends State<Editable> {
                     widget.onCellValueChanged?.call(editedRows);
                   },
                 );
-        }),
-      );
-    }
-
-    /// Generates table rows
-    Widget _tableRows(double screenWidth) {
-      return ListView.builder(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          scrollDirection: Axis.vertical,
-          itemCount: rowCount!,
-          itemBuilder: (context, index) {
-            return _tableRow(index, screenWidth);
+              },
+            );
+            // return _tableRow(index);
           });
     }
 
@@ -532,8 +540,7 @@ class EditableState extends State<Editable> {
             scrollDirection: Axis.horizontal,
             controller: _scrollController,
             child: SizedBox(
-              width: 10000,
-              height: MediaQuery.of(context).size.height - 200,
+              width: widget.tableWidth + widthOfEditButton,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: widget.createButtonAlign,
@@ -550,10 +557,13 @@ class EditableState extends State<Editable> {
                     child: Row(
                         crossAxisAlignment: widget.thVertAlignment,
                         mainAxisSize: MainAxisSize.min,
-                        children: _tableHeaders(10000)),
+                        children: _tableHeaders()),
                   ),
 
-                  _tableRows(10000),
+                  SizedBox(
+                    height: widget.tableHeight,
+                    child: _tableRows(),
+                  ),
                 ],
               ),
             ),
@@ -569,5 +579,71 @@ class EditableState extends State<Editable> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+}
+
+class _RowBuilder extends StatefulWidget {
+  const _RowBuilder({
+    Key? key,
+    required this.columnCount,
+    required this.rows,
+    required this.columnIndex,
+    required this.cellBuilder,
+    required this.cellKeys,
+  }) : super(key: key);
+
+  final int columnCount;
+  final List<Map<String, dynamic>> rows;
+  final int columnIndex;
+  final List<String> cellKeys;
+  final Widget Function(BuildContext, int, String, bool) cellBuilder;
+
+  @override
+  State<_RowBuilder> createState() => _RowBuilderState();
+}
+
+class _RowBuilderState extends State<_RowBuilder> {
+  bool editMode = false;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _EditableDropDownMenu(
+          onPressed: (() {
+            setState(() {
+              editMode = true;
+            });
+          }),
+        ),
+        ...List.generate(widget.columnCount, (rowIndex) {
+          final list = widget.rows[widget.columnIndex];
+          return widget.cellBuilder(
+            context,
+            rowIndex,
+            list[widget.cellKeys[rowIndex]].toString(),
+            editMode,
+          );
+        })
+      ],
+    );
+  }
+}
+
+class _EditableDropDownMenu extends StatelessWidget {
+  const _EditableDropDownMenu({Key? key, required this.onPressed})
+      : super(key: key);
+
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: const Center(
+        child: Icon(Icons.edit),
+      ),
+    );
   }
 }
