@@ -30,6 +30,9 @@ class RowBuilder extends StatefulWidget {
     required this.useOnlyNumbers,
     required this.screenWidth,
     required this.editMode,
+    required this.onEditBackgroundColor,
+    required this.rowSelected,
+    required this.selectedBackgroundColor,
   })  : _trHeight = trHeight,
         _borderColor = borderColor,
         _borderWidth = borderWidth,
@@ -60,6 +63,9 @@ class RowBuilder extends StatefulWidget {
   final bool useOnlyNumbers;
   final double screenWidth;
   final bool editMode;
+  final Color onEditBackgroundColor;
+  final bool rowSelected;
+  final Color selectedBackgroundColor;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -68,19 +74,37 @@ class RowBuilder extends StatefulWidget {
 class _RowBuilderState extends State<RowBuilder> {
   bool error = false;
 
+  Color? _bgColor() {
+    if (widget.editMode && !error) {
+      return widget.onEditBackgroundColor;
+    } else if (widget.rowSelected) {
+      return widget.selectedBackgroundColor;
+    }
+    return error
+        ? Colors.red.withOpacity(0.12)
+        : widget.index % 2 == 1.0
+            ? widget.stripeColor2
+            : widget.stripeColor1;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       height: widget._trHeight < 40 ? 40 : widget._trHeight,
       width: widget.screenWidth * widget.widthRatio!,
       decoration: BoxDecoration(
-          color: !widget.zebraStripe
-              ? null
-              : (widget.index % 2 == 1.0
-                  ? widget.stripeColor2
-                  : widget.stripeColor1),
-          border: Border.all(
-              color: widget._borderColor, width: widget._borderWidth)),
+        color: widget.rowSelected
+            ? widget.selectedBackgroundColor
+            : (!widget.zebraStripe
+                ? null
+                : (widget.index % 2 == 1.0
+                    ? widget.stripeColor2
+                    : widget.stripeColor1)),
+        border: Border.all(
+          color: error ? Colors.red : widget._borderColor,
+          width: error ? 2 : widget._borderWidth,
+        ),
+      ),
       child: widget.editMode
           ? TextFormField(
               textAlign: widget.tdAlignment,
@@ -123,17 +147,11 @@ class _RowBuilderState extends State<RowBuilder> {
               maxLines: widget.tdEditableMaxLines,
               inputFormatters: [
                 if (widget.useOnlyNumbers)
-                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  FilteringTextInputFormatter.allow(RegExp(r'-?[0-9]{0,10}')),
               ],
               decoration: InputDecoration(
                 filled: widget.zebraStripe,
-                fillColor: !widget.zebraStripe
-                    ? (error ? Colors.red.withOpacity(0.07) : null)
-                    : (error
-                        ? Colors.red.withOpacity(0.07)
-                        : (widget.index % 2 == 1.0
-                            ? widget.stripeColor2
-                            : widget.stripeColor1)),
+                fillColor: _bgColor(),
                 contentPadding: EdgeInsets.only(
                     left: widget.tdPaddingLeft,
                     right: widget.tdPaddingRight,
@@ -152,11 +170,13 @@ class _RowBuilderState extends State<RowBuilder> {
                 // bottom: widget.tdPaddingBottom,
               ),
               decoration: BoxDecoration(
-                color: !widget.zebraStripe
-                    ? null
-                    : (widget.index % 2 == 1.0
-                        ? widget.stripeColor2
-                        : widget.stripeColor1),
+                color: widget.rowSelected
+                    ? widget.selectedBackgroundColor
+                    : (!widget.zebraStripe
+                        ? null
+                        : (widget.index % 2 == 1.0
+                            ? widget.stripeColor2
+                            : widget.stripeColor1)),
               ),
               child: Text(
                 widget.cellData.toString(),

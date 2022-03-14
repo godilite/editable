@@ -5,7 +5,7 @@ class EditableColumn {
   final bool? editable;
   final bool useOnlyNumbers;
 
-  EditableColumn({
+  const EditableColumn({
     required this.key,
     required this.title,
     this.widthFactor,
