@@ -402,12 +402,13 @@ class EditableState extends State<Editable> {
     }
 
     /// Generates table columns
-    List<Widget> _tableHeaders() {
+    List<Widget> _tableHeaders(double screenWidth) {
       return List<Widget>.generate(columnCount! + 1, (index) {
         return columnCount! + 1 == (index + 1)
             ? iconColumn(widget.showSaveIcon, widget.thPaddingTop,
                 widget.thPaddingBottom)
             : THeader(
+                screenWidth: screenWidth,
                 widthRatio:
                     widget.columns[index].widthFactor ?? widget.columnRatio,
                 thAlignment: widget.thAlignment,
@@ -451,7 +452,7 @@ class EditableState extends State<Editable> {
       );
     }
 
-    Widget _tableRow(int index) {
+    Widget _tableRow(int index, double screenWidth) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -482,6 +483,7 @@ class EditableState extends State<Editable> {
                   stripeColor1: widget.stripeColor1,
                   stripeColor2: widget.stripeColor2,
                   useOnlyNumbers: cNumOnly[rowIndex],
+                  screenWidth: screenWidth,
                   //ignore:implicit_dynamic_parameter
                   onChanged: (value) {
                     ///checks if row has been edited previously
@@ -507,14 +509,14 @@ class EditableState extends State<Editable> {
     }
 
     /// Generates table rows
-    Widget _tableRows() {
+    Widget _tableRows(double screenWidth) {
       return ListView.builder(
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemCount: rowCount!,
           itemBuilder: (context, index) {
-            return _tableRow(index);
+            return _tableRow(index, screenWidth);
           });
     }
 
@@ -548,10 +550,10 @@ class EditableState extends State<Editable> {
                     child: Row(
                         crossAxisAlignment: widget.thVertAlignment,
                         mainAxisSize: MainAxisSize.min,
-                        children: _tableHeaders()),
+                        children: _tableHeaders(10000)),
                   ),
 
-                  _tableRows(),
+                  _tableRows(10000),
                 ],
               ),
             ),

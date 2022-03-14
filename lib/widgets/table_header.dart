@@ -15,6 +15,7 @@ class THeader extends StatelessWidget {
       required FontWeight thWeight,
       required double thSize,
       required double? widthRatio,
+      required this.screenWidth,
       required int index})
       : _headers = headers,
         _thWeight = thWeight,
@@ -24,6 +25,7 @@ class THeader extends StatelessWidget {
         super(key: key);
 
   final double thPaddingLeft;
+  final double screenWidth;
   final double thPaddingTop;
   final double thPaddingBottom;
   final double thPaddingRight;
@@ -36,11 +38,10 @@ class THeader extends StatelessWidget {
   final double? _widthRatio;
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Flexible(
       fit: FlexFit.loose,
       child: SizedBox(
-        width: width * _widthRatio!,
+        width: screenWidth * _widthRatio!,
         child: Padding(
           padding: EdgeInsets.only(
               left: thPaddingLeft,

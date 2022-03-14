@@ -6,6 +6,7 @@ class RowBuilder extends StatefulWidget {
   /// its properties are not nullable
   const RowBuilder({
     Key? key,
+    required this.screenWidth,
     required this.tdAlignment,
     required this.tdStyle,
     required double trHeight,
@@ -56,6 +57,7 @@ class RowBuilder extends StatefulWidget {
   final ValueChanged? onSubmitted;
   final ValueChanged onChanged;
   final bool useOnlyNumbers;
+  final double screenWidth;
 
   @override
   _RowBuilderState createState() => _RowBuilderState();
@@ -66,13 +68,12 @@ class _RowBuilderState extends State<RowBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Flexible(
       fit: FlexFit.loose,
       flex: 6,
       child: Container(
         height: widget._trHeight < 40 ? 40 : widget._trHeight,
-        width: width * widget.widthRatio!,
+        width: widget.screenWidth * widget.widthRatio!,
         decoration: BoxDecoration(
             color: !widget.zebraStripe
                 ? null
