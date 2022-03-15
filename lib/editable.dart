@@ -521,7 +521,7 @@ class EditableState extends State<Editable> {
                   onChanged: (value) {
                     ///checks if row has been edited previously
                     final result = editedRows.indexWhere((element) {
-                      return element['row'] != index;
+                      return element['row'] == index;
                     });
 
                     ///adds a new edited data to a temporary holder
