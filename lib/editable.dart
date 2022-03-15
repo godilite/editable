@@ -484,6 +484,19 @@ class EditableState extends State<Editable> {
               onSelectedChanged: (value) {
                 _rows[index]['selected'] = value;
               },
+              onEditMode: (editMode) {
+                if (!editMode) {
+                  /// checks if row has been edited previously
+                  final result = editedRows.indexWhere((element) {
+                    return element['row'] == index;
+                  });
+
+                  /// Removes edited values if edit mode was dismissed.
+                  if (result != -1) {
+                    editedRows.removeAt(result);
+                  }
+                }
+              },
               cellKeys: ckeys,
               columnCount: columnCount!,
               rows: _rows,
@@ -607,6 +620,7 @@ class _RowBuilder extends StatefulWidget {
     required this.cellKeys,
     required this.onSelectedChanged,
     required this.selected,
+    required this.onEditMode,
   }) : super(key: key);
 
   final int columnCount;
@@ -615,6 +629,7 @@ class _RowBuilder extends StatefulWidget {
   final List<String> cellKeys;
   final Widget Function(BuildContext, int, String, bool) cellBuilder;
   final Function(bool) onSelectedChanged;
+  final Function(bool) onEditMode;
   final bool selected;
 
   @override
@@ -638,9 +653,10 @@ class _RowBuilderState extends State<_RowBuilder> {
               widget.onSelectedChanged(value);
             });
           },
-          onEdit: (() {
+          onEdit: ((value) {
             setState(() {
-              editMode = true;
+              editMode = value;
+              widget.onEditMode(value);
             });
           }),
           //TODO: implement on delele.
@@ -683,7 +699,7 @@ class _EditablePopupMenu extends StatefulWidget {
     required this.rowSelected,
   }) : super(key: key);
 
-  final VoidCallback onEdit;
+  final Function(bool) onEdit;
   final VoidCallback onDelete;
   final VoidCallback onShowImage;
   final VoidCallback onUploadImage;
@@ -696,6 +712,7 @@ class _EditablePopupMenu extends StatefulWidget {
 
 class _EditablePopupMenuState extends State<_EditablePopupMenu> {
   late bool isSelected = widget.rowSelected;
+  bool _editMode = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -706,7 +723,11 @@ class _EditablePopupMenuState extends State<_EditablePopupMenu> {
             switch (result) {
               case EditablePopupMenuOptions.onEdit:
                 // ignore: unnecessary_statements
-                widget.onEdit();
+                setState(() {
+                  _editMode = !_editMode;
+                  widget.onEdit(_editMode);
+                });
+
                 break;
               case EditablePopupMenuOptions.onDelete:
                 // ignore: unnecessary_statements
@@ -727,9 +748,9 @@ class _EditablePopupMenuState extends State<_EditablePopupMenu> {
           },
           itemBuilder: (BuildContext context) =>
               <PopupMenuEntry<EditablePopupMenuOptions>>[
-            const PopupMenuItem<EditablePopupMenuOptions>(
+            PopupMenuItem<EditablePopupMenuOptions>(
               value: EditablePopupMenuOptions.onEdit,
-              child: Text('Edit'),
+              child: Text(_editMode ? 'Dismiss Edit' : 'Edit'),
             ),
             const PopupMenuItem<EditablePopupMenuOptions>(
               value: EditablePopupMenuOptions.onDelete,
