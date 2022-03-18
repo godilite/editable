@@ -98,6 +98,7 @@ class Editable extends StatefulWidget {
     required this.tableHeight,
     required this.editedRowBackgroundColor,
     required this.selectedRowBackgroundColor,
+    required this.showImage,
   }) : super(key: key);
 
   /// A data set to create headers
@@ -326,6 +327,9 @@ class Editable extends StatefulWidget {
   /// Background color of selected row.
   final Color selectedRowBackgroundColor;
 
+  /// Void Callback that gives you data from clicked row.
+  final Function(Map<String, dynamic>) showImage;
+
   @override
   EditableState createState() => EditableState();
 }
@@ -497,6 +501,7 @@ class EditableState extends State<Editable> {
                   }
                 }
               },
+              onShowImage: (row) => widget.showImage(row),
               cellKeys: ckeys,
               columnCount: columnCount!,
               rows: _rows,
@@ -621,6 +626,7 @@ class _RowBuilder extends StatefulWidget {
     required this.onSelectedChanged,
     required this.selected,
     required this.onEditMode,
+    required this.onShowImage,
   }) : super(key: key);
 
   final int columnCount;
@@ -631,6 +637,7 @@ class _RowBuilder extends StatefulWidget {
   final Function(bool) onSelectedChanged;
   final Function(bool) onEditMode;
   final bool selected;
+  final Function(Map<String, dynamic>) onShowImage;
 
   @override
   State<_RowBuilder> createState() => _RowBuilderState();
@@ -662,7 +669,8 @@ class _RowBuilderState extends State<_RowBuilder> {
           //TODO: implement on delele.
           onDelete: () {},
           //TODO: implement on show Image.
-          onShowImage: () {},
+          onShowImage: () =>
+              widget.onShowImage(widget.rows[widget.columnIndex]),
           //TODO: implement on upload Image.
           onUploadImage: () {},
         ),
