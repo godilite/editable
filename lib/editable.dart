@@ -337,6 +337,8 @@ class Editable extends StatefulWidget {
 class EditableState extends State<Editable> {
   int? columnCount;
   int? rowCount;
+  late List<EditableColumn> _columns;
+  late List<Map<String, dynamic>> _rows;
 
   ///Get all edited rows
   List<Map<String, dynamic>> get editedRows => _editedRows;
@@ -351,15 +353,20 @@ class EditableState extends State<Editable> {
   /// Controller for the scrollbar
   final ScrollController _scrollController = ScrollController();
 
+  /// initial Setup of columns and row, sets count of column and row
+
+  @override
+  void initState() {
+    rowCount = widget.rows.isEmpty ? widget.rowCount : widget.rows.length;
+    columnCount = widget.columns.isEmpty ? columnCount : widget.columns.length;
+    _columns = widget.columns;
+    _rows = widget.rows;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     const widthOfEditButton = 40.0;
-
-    /// initial Setup of columns and row, sets count of column and row
-    rowCount = widget.rows.isEmpty ? widget.rowCount : widget.rows.length;
-    columnCount = widget.columns.isEmpty ? columnCount : widget.columns.length;
-    final _columns = widget.columns;
-    var _rows = widget.rows;
 
     final ckeys = <String>[];
     final cwidths = <double>[];
