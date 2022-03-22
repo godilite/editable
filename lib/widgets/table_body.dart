@@ -125,6 +125,7 @@ class _RowBuilderState extends State<RowBuilder> {
                   if (_num == null) {
                     setState(() {
                       error = true;
+                      widget.onChanged(_num);
                     });
                   } else {
                     error = false;
@@ -134,6 +135,7 @@ class _RowBuilderState extends State<RowBuilder> {
                   if (value.isEmpty) {
                     setState(() {
                       error = true;
+                      widget.onChanged(value);
                     });
                   } else {
                     setState(() {
