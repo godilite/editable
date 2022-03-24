@@ -99,6 +99,7 @@ class Editable extends StatefulWidget {
     required this.editedRowBackgroundColor,
     required this.selectedRowBackgroundColor,
     required this.showImage,
+    required this.uploadImage,
   }) : super(key: key);
 
   /// A data set to create headers
@@ -330,6 +331,9 @@ class Editable extends StatefulWidget {
   /// Void Callback that gives you data from clicked row.
   final Function(Map<String, dynamic>) showImage;
 
+  /// Void Callback that gives you data from from row.
+  final Function(Map<String, dynamic>) uploadImage;
+
   @override
   EditableState createState() => EditableState();
 }
@@ -509,6 +513,7 @@ class EditableState extends State<Editable> {
                 }
               },
               onShowImage: (row) => widget.showImage(row),
+              uploadImage: (row) => widget.uploadImage(row),
               cellKeys: ckeys,
               columnCount: columnCount!,
               rows: _rows,
@@ -634,6 +639,7 @@ class _RowBuilder extends StatefulWidget {
     required this.selected,
     required this.onEditMode,
     required this.onShowImage,
+    required this.uploadImage,
   }) : super(key: key);
 
   final int columnCount;
@@ -645,6 +651,7 @@ class _RowBuilder extends StatefulWidget {
   final Function(bool) onEditMode;
   final bool selected;
   final Function(Map<String, dynamic>) onShowImage;
+  final Function(Map<String, dynamic>) uploadImage;
 
   @override
   State<_RowBuilder> createState() => _RowBuilderState();
@@ -675,11 +682,12 @@ class _RowBuilderState extends State<_RowBuilder> {
           }),
           //TODO: implement on delele.
           onDelete: () {},
-          //TODO: implement on show Image.
           onShowImage: () =>
               widget.onShowImage(widget.rows[widget.columnIndex]),
-          //TODO: implement on upload Image.
-          onUploadImage: () {},
+
+          onUploadImage: () {
+            widget.uploadImage(widget.rows[widget.columnIndex]);
+          },
         ),
         ...List.generate(widget.columnCount, (rowIndex) {
           final list = widget.rows[widget.columnIndex];
