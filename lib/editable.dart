@@ -99,6 +99,7 @@ class Editable extends StatefulWidget {
     required this.editedRowBackgroundColor,
     required this.selectedRowBackgroundColor,
     required this.actionsBuilder,
+    required this.leftTableMargin,
   }) : super(key: key);
 
   /// A data set to create headers
@@ -327,6 +328,9 @@ class Editable extends StatefulWidget {
   /// Background color of selected row.
   final Color selectedRowBackgroundColor;
 
+  /// Margin on the left that needs to be reserved for `actionsBuilder`.
+  final double leftTableMargin;
+
   final Widget Function(
     Map<String, dynamic> rowData,
     void Function(bool) onEditMode,
@@ -368,8 +372,8 @@ class EditableState extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
-    // 40 for the checkbox + 80 for the action buttons
-    const widthOfEditButton = 80.0 + 40.0;
+    // 40 for the checkbox + `leftTableMargin` for the action buttons
+    final widthOfEditButton = widget.leftTableMargin + 40.0;
 
     final ckeys = <String>[];
     final cwidths = <double>[];
@@ -385,7 +389,7 @@ class EditableState extends State<Editable> {
     /// Generates table columns
     List<Widget> _tableHeaders() {
       return [
-        const SizedBox(
+        SizedBox(
           width: widthOfEditButton,
         ),
         ...List<Widget>.generate(columnCount! + 1, (index) {
