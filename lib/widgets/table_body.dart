@@ -66,14 +66,12 @@ class RowBuilder extends StatefulWidget {
   final Color onEditBackgroundColor;
   final bool rowSelected;
   final Color selectedBackgroundColor;
-
   @override
   _RowBuilderState createState() => _RowBuilderState();
 }
 
 class _RowBuilderState extends State<RowBuilder> {
   bool error = false;
-
   Color? _bgColor() {
     if (widget.editMode && !error) {
       return widget.onEditBackgroundColor;
@@ -105,7 +103,7 @@ class _RowBuilderState extends State<RowBuilder> {
           width: error ? 2 : widget._borderWidth,
         ),
       ),
-      child: widget.editMode
+      child: widget.editMode && widget.isEditable
           ? TextFormField(
               textAlign: widget.tdAlignment,
               style: widget.tdStyle,
@@ -181,7 +179,7 @@ class _RowBuilderState extends State<RowBuilder> {
                             : widget.stripeColor1)),
               ),
               child: Text(
-                widget.cellData.toString(),
+                widget.cellData ?? '',
                 textAlign: widget.tdAlignment,
                 style: widget.tdStyle ??
                     const TextStyle(
