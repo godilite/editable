@@ -179,7 +179,7 @@ class _RowBuilderState extends State<RowBuilder> {
                             : widget.stripeColor1)),
               ),
               child: Text(
-                widget.cellData ?? '',
+                widget.cellData.toString(),
                 textAlign: widget.tdAlignment,
                 style: widget.tdStyle ??
                     const TextStyle(
