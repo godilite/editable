@@ -652,7 +652,9 @@ class _RowBuilderState extends State<_RowBuilder> {
           return widget.cellBuilder(
             context,
             rowIndex,
-            list[widget.cellKeys[rowIndex]].toString(),
+            list[widget.cellKeys[rowIndex]] == null
+                ? ''
+                : list[widget.cellKeys[rowIndex]].toString(),
             editMode,
           );
         })
