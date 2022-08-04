@@ -372,8 +372,8 @@ class EditableState extends State<Editable> {
 
   @override
   Widget build(BuildContext context) {
-    // 40 for the checkbox + `leftTableMargin` for the action buttons
-    final widthOfEditButton = widget.leftTableMargin + 40.0;
+    // `leftTableMargin` for the action buttons
+    final widthOfEditButton = widget.leftTableMargin;
 
     final ckeys = <String>[];
     final cwidths = <double>[];
@@ -614,31 +614,6 @@ class _RowBuilderState extends State<_RowBuilder> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.blueGrey,
-              ),
-            ),
-          ),
-          child: SizedBox(
-            width: 40,
-            height: 100,
-            child: Checkbox(
-              value: selected,
-              // TODO enable selection when we can do something with it
-              onChanged: true
-                  ? null
-                  : (value) {
-                      setState(() {
-                        selected = value ?? false;
-                        widget.onSelectedChanged(value ?? false);
-                      });
-                    },
-            ),
-          ),
-        ),
         widget.actionsBuilder(
           widget.rows[widget.columnIndex],
           (isEditing) => setState(
